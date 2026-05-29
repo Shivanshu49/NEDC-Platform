@@ -1,0 +1,31 @@
+/*
+ * Tailwind v4 is configured entirely in CSS (no tailwind.config.js).
+ * This single import pulls in Tailwind's base, components, and utilities.
+ */
+@import "tailwindcss";
+
+/* Brand + base colors. Change --color-brand in one place to re-skin the site. */
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a; /* slate-900 */
+}
+
+/*
+ * `@theme inline` registers these as Tailwind theme values, so you can write
+ * classes like `bg-background`, `text-foreground`, `bg-brand`, `text-brand`,
+ * and the `font-sans` / `font-mono` families wired up in app/layout.tsx.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: #4f46e5; /* indigo-600 */
+  --color-brand-foreground: #ffffff;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
