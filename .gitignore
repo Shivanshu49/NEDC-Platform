@@ -41,7 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Claude Code harness state + internal working docs (kept private, not published)
+# Local-only notes and tooling state
 .claude/
 CLAUDE.md
 SETUP.md
