@@ -1,9 +1,9 @@
 /**
- * Consistent heading block for page sections: small eyebrow + title + intro.
+ * Section heading block — serif title in navy-slate, like the reference.
  *
  * `as` controls the heading level: pass `as="h1"` when this is the page's TOP
  * heading (so every page has exactly one <h1>); leave the default "h2" for
- * sections within a page. The styling is identical either way.
+ * sections. `eyebrow` is an optional small label above the title.
  */
 export function SectionHeading({
   eyebrow,
@@ -21,14 +21,23 @@ export function SectionHeading({
   return (
     <div className={`max-w-2xl ${center ? "mx-auto text-center" : ""}`}>
       {eyebrow && (
-        <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand">
+        <p
+          className={`mb-3 inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.16em] text-primary ${
+            center ? "justify-center" : ""
+          }`}
+        >
+          <span aria-hidden className="h-px w-6 bg-brand" />
           {eyebrow}
         </p>
       )}
-      <Heading className="text-3xl font-bold tracking-tight sm:text-4xl">
+      <Heading className="font-display text-balance text-fluid-h2 font-bold leading-tight tracking-tight text-foreground">
         {title}
       </Heading>
-      {subtitle && <p className="mt-4 text-lg text-foreground/70">{subtitle}</p>}
+      {subtitle && (
+        <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground">
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }

@@ -1,40 +1,78 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// Two Google fonts loaded via Next's font system (no extra network requests at
-// runtime — they're self-hosted at build time). Exposed to CSS as variables.
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Plus Jakarta Sans — confident, modern sans for display headings.
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
+  display: "swap",
 });
 
+// Inter — clean, legible body + UI font.
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Monospace — used for the occasional code/figure.
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
-// Site-wide <head> metadata. Next merges/overrides this with any `metadata`
-// exported from individual pages.
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "NEDC — National Entrepreneurship Development Center",
+    default:
+      "NEDC — National Entrepreneurship Development Center | Become a Job Creator",
     template: "%s | NEDC",
   },
   description:
-    "Live 5–6 day online entrepreneurship programs. Learn from experts, join live Zoom sessions, and rewatch the recordings.",
+    "NEDC runs the Entrepreneurship Development Program (EDP) — online & hybrid training that turns students, youth, professionals, women, and rural innovators into startup founders and job creators. Registrations opening soon.",
+  keywords: [
+    "NEDC",
+    "Entrepreneurship Development Program",
+    "EDP",
+    "startup training India",
+    "become a job creator",
+    "MSME",
+    "Startup India",
+    "youth entrepreneurship",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: "NEDC — National Entrepreneurship Development Center",
+    title: "NEDC — Transforming Youth into Entrepreneurs",
+    description:
+      "Join the Entrepreneurship Development Program (EDP). Learn • Innovate • Build • Lead. Registrations opening soon.",
+    url: SITE_URL,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NEDC — Transforming Youth into Entrepreneurs",
+    description:
+      "Join the Entrepreneurship Development Program (EDP). Learn • Innovate • Build • Lead.",
+  },
 };
 
-// The root layout wraps every page in the app. Keep it minimal — shared chrome
-// like a navbar/footer will be added per route group in later phases.
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    // suppressHydrationWarning: only <body> attributes can differ here (browser
+    // extensions, dev font-class re-hashing) — both benign, both one level deep.
+    <html lang="en" suppressHydrationWarning>
+      <body
+        suppressHydrationWarning
+        className={`${inter.variable} ${jakarta.variable} ${geistMono.variable} antialiased`}
+      >
         {children}
       </body>
     </html>

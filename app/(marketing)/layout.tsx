@@ -1,10 +1,11 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 /**
- * Shared chrome for all PUBLIC marketing pages (home + program/speakers/etc.).
+ * Shared chrome for all PUBLIC marketing pages (home + program/about/etc.).
  * The "(marketing)" folder is a route group: it organizes files but adds NO URL
- * segment, so this layout wraps "/" as well as "/program", "/faq", and so on.
+ * segment, so this layout wraps "/" as well as "/program", "/about", and so on.
  */
 export default function MarketingLayout({
   children,
@@ -16,6 +17,7 @@ export default function MarketingLayout({
       <Navbar />
       <main>{children}</main>
       <Footer />
+      <WhatsAppButton />
     </>
   );
 }

@@ -30,7 +30,7 @@ export default async function GalleryPage() {
             {images.map((img) => (
               <figure
                 key={img.id}
-                className="break-inside-avoid overflow-hidden rounded-2xl border border-foreground/10"
+                className="break-inside-avoid overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
               >
                 <Image
                   src={img.image_url}
@@ -41,7 +41,7 @@ export default async function GalleryPage() {
                   className="h-auto w-full"
                 />
                 {img.caption && (
-                  <figcaption className="p-3 text-sm text-foreground/60">
+                  <figcaption className="p-3 text-sm text-muted-foreground">
                     {img.caption}
                   </figcaption>
                 )}

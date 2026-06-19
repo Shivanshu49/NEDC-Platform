@@ -1,31 +1,306 @@
 /*
- * Tailwind v4 is configured entirely in CSS (no tailwind.config.js).
- * This single import pulls in Tailwind's base, components, and utilities.
+ * Tailwind v4 + shadcn/ui design system (configured entirely in CSS — no
+ * tailwind.config.js). Single source of truth for the NEDC brand.
+ *
+ * OFFICIAL BRAND (FINAL): deep NAVY primary (trust, leadership) + a LEADERSHIP
+ * MAROON brand accent (ambition, growth), on off-white. National startup-mission
+ * feel — modern, professional, premium. All pairings meet WCAG AA.
+ *
+ * KEY MAPPING RULE: maroon is the custom --brand token (use via bg-brand /
+ * text-brand-foreground for CTAs, highlights, accents). shadcn's --accent stays
+ * NEUTRAL gray (it controls subtle hover backgrounds). Navy --primary dominates
+ * (~60%); maroon --brand is the accent (~20%), never a co-lead.
  */
 @import "tailwindcss";
+@import "tw-animate-css";
 
-/* Brand + base colors. Change --color-brand in one place to re-skin the site. */
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a; /* slate-900 */
+  --radius: 0.875rem; /* ~14px rounded cards */
+
+  /* Surfaces & text */
+  --background: #fafbfc;          /* Off White */
+  --foreground: #2d3748;          /* Charcoal — body text */
+
+  --card: #ffffff;                /* white cards */
+  --card-foreground: #2d3748;
+  --popover: #ffffff;
+  --popover-foreground: #2d3748;
+
+  /* Primary — Deep Navy (most buttons, headings) */
+  --primary: #0a2f6b;             /* Primary Navy */
+  --primary-foreground: #fafbfc;
+
+  /* Secondary — Light Gray section surface */
+  --secondary: #f3f5f7;           /* Light Gray */
+  --secondary-foreground: #0a2f6b;
+
+  /* Muted — section backgrounds, muted copy */
+  --muted: #f3f5f7;
+  --muted-foreground: #64748b;    /* Slate Gray — AA on white */
+
+  /* Accent — NEUTRAL (subtle hover bg), NOT maroon (see mapping rule above) */
+  --accent: #f3f5f7;
+  --accent-foreground: #0a2f6b;
+
+  /* Feedback */
+  --destructive: #dc2626;         /* standard red, distinct from brand maroon */
+  --destructive-foreground: #ffffff;
+  --success: #16a34a;
+  --success-foreground: #ffffff;
+
+  /* Lines & inputs */
+  --border: #d9dee5;              /* Soft Gray */
+  --input: #d9dee5;
+  --ring: #123f8c;                /* Rich Blue — focus ring */
+
+  /* NEDC BRAND tokens (maroon) — CTAs, highlights, accents */
+  --brand: #8b1538;               /* Leadership Maroon */
+  --brand-foreground: #fafbfc;
+  --brand-dark: #6b102c;          /* Premium Burgundy — maroon hover */
+  --brand-light: #f0a8b9;         /* Rose — AA-legible maroon accent ON navy */
+  --navy-soft: #123f8c;           /* Rich Blue — navy hover & gradient mid-stop */
+
+  /* Hero gradient (brand spec) */
+  --gradient-hero: linear-gradient(135deg, #0a2f6b 0%, #123f8c 50%, #8b1538 100%);
+
+  /* Decorative */
+  --panel: #eaf1fb;               /* soft navy-tinted panel (white sections) */
+  --pale: #fbe9ee;               /* soft maroon-tinted circle behind imagery */
+  --gold: #fbbf24;               /* amber — reserved for star ratings only */
+  --sky: #123f8c;                /* Rich Blue */
+
+  --chart-1: #0a2f6b;
+  --chart-2: #8b1538;
+  --chart-3: #123f8c;
+  --chart-4: #6b102c;
+  --chart-5: #64748b;
 }
 
-/*
- * `@theme inline` registers these as Tailwind theme values, so you can write
- * classes like `bg-background`, `text-foreground`, `bg-brand`, `text-brand`,
- * and the `font-sans` / `font-mono` families wired up in app/layout.tsx.
- */
+.dark {
+  --background: #0a1730;
+  --foreground: #f3f5f7;
+  --card: #0f2147;
+  --card-foreground: #f3f5f7;
+  --popover: #0f2147;
+  --popover-foreground: #f3f5f7;
+  --primary: #3b6fc9;
+  --primary-foreground: #fafbfc;
+  --secondary: #16294d;
+  --secondary-foreground: #f3f5f7;
+  --muted: #16294d;
+  --muted-foreground: #94a3b8;
+  --accent: #1a2e54;
+  --accent-foreground: #f3f5f7;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --success: #4ade80;
+  --success-foreground: #0a1730;
+  --border: #1e3358;
+  --input: #1e3358;
+  --ring: #3b6fc9;
+  --brand: #b41e45;
+  --brand-foreground: #fafbfc;
+  --brand-dark: #8b1538;
+  --navy-soft: #2e5ba8;
+  --gradient-hero: linear-gradient(135deg, #0a1730 0%, #123f8c 50%, #8b1538 100%);
+  --panel: #14254a;
+  --pale: #3a1f2a;
+  --gold: #fbbf24;
+  --sky: #3b6fc9;
+}
+
+/* Register tokens with Tailwind: bg-primary, text-muted-foreground, bg-accent… */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand: #4f46e5; /* indigo-600 */
-  --color-brand-foreground: #ffffff;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* NEDC brand (maroon) — bg-brand / text-brand-foreground / hover:bg-brand-dark */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-light: var(--brand-light);
+  --color-navy-soft: var(--navy-soft);
+
+  /* Decorative */
+  --color-panel: var(--panel);
+  --color-pale: var(--pale);
+  --color-gold: var(--gold);
+  --color-sky: var(--sky);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Radius scale */
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: calc(var(--radius) - 1px);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Premium navy-tinted shadows — soft (rest) → lift (hover) → float (elevated
+     cards like the overlapping stat bar). Warmer & deeper than the default grays
+     so white cards read as crafted, not flat. */
+  --shadow-soft: 0 1px 2px rgba(10, 47, 107, 0.05), 0 10px 30px -12px rgba(10, 47, 107, 0.18);
+  --shadow-lift: 0 2px 6px rgba(10, 47, 107, 0.07), 0 24px 50px -16px rgba(10, 47, 107, 0.28);
+  --shadow-float: 0 4px 12px rgba(10, 47, 107, 0.08), 0 34px 70px -22px rgba(10, 47, 107, 0.34);
+
+  /* Fonts (wired in app/layout.tsx via next/font) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jakarta), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Fluid type (SKILL.md responsive scale) — smooth vw-based sizing, no jumps.
+     `text-hero` for the landing headline; `text-fluid-h1` for inner page heroes;
+     `text-fluid-h2` for section titles. */
+  --text-hero: clamp(2.5rem, 1.6rem + 4vw, 4.5rem);
+  --text-fluid-h1: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+  --text-fluid-h2: clamp(1.75rem, 1.1rem + 2.4vw, 2.75rem);
+
+  /* Accordion (FAQ) animation */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  /* Hero tagline rotator: fade each line IN, hold it readable, then fade out
+     (each line plays this once over its 3s slot before the next swaps in). */
+  --animate-tagline: tagline 9s ease-in-out infinite;
+  @keyframes tagline {
+    0% { opacity: 0; transform: translateY(0.45rem); }
+    14%, 86% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-0.45rem); }
+  }
+
+  /* Hero grid: gentle ambient shimmer — scattered cells breathe in/out.
+     Animates opacity only (GPU-composited), so it stays cheap across many cells. */
+  --animate-grid-shimmer: grid-shimmer 6s ease-in-out infinite;
+  @keyframes grid-shimmer {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 0.8; }
+  }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: var(--ring);
+  }
+  /* Smooth in-page scrolling for the landing-page anchor nav (#program, #faq…).
+     The sticky header offset is handled per-section via `scroll-mt-24`. */
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Confident modern sans for display headings (Plus Jakarta Sans). */
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+/* ============================================================
+   Homepage atmosphere — textures, masks & scroll-reveal.
+   Plain CSS (not @theme tokens) so the rules always ship.
+   ============================================================ */
+
+/* Faint navy dot-grid for differentiating LIGHT section bands. */
+.bg-dot-grid {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--primary) 9%, transparent) 1.2px,
+    transparent 1.2px
+  );
+  background-size: 24px 24px;
+}
+
+/* Light dot-grid for use ON dark (navy) bands. */
+.bg-dot-grid-light {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+/* Fade a decorative layer out toward the edges (no hard seam). */
+.mask-fade-edges {
+  -webkit-mask-image: radial-gradient(ellipse 78% 78% at 50% 42%, #000 35%, transparent 86%);
+  mask-image: radial-gradient(ellipse 78% 78% at 50% 42%, #000 35%, transparent 86%);
+}
+
+/* Scroll-reveal — pure-CSS progressive enhancement. The initial opacity:0 lives
+   ONLY inside the @supports + no-reduced-motion guard, so anywhere the
+   scroll-timeline isn't supported (or motion is reduced) the element just stays
+   visible. No JS, no layout shift, graceful everywhere. */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      animation: reveal-up both linear;
+      animation-timeline: view();
+      animation-range: entry 5% entry 50%;
+    }
+  }
 }

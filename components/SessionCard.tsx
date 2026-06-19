@@ -30,27 +30,27 @@ export function SessionCard({
   recording: RecordingState;
 }) {
   const badge = {
-    live: { text: "● Live now", cls: "bg-green-100 text-green-700" },
-    upcoming: { text: "Upcoming", cls: "bg-brand/10 text-brand" },
-    past: { text: "Completed", cls: "bg-foreground/10 text-foreground/60" },
+    live: { text: "● Live now", cls: "bg-success/10 text-success" },
+    upcoming: { text: "Upcoming", cls: "bg-primary/10 text-primary" },
+    past: { text: "Completed", cls: "bg-muted text-muted-foreground" },
   }[status];
 
   // Show the Zoom button while the session is upcoming or live (it's gone once past).
   const showJoin = status !== "past" && !!zoomJoinUrl;
 
   return (
-    <li className="rounded-2xl border border-foreground/10 p-5">
+    <li className="rounded-2xl border border-border bg-card p-5 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
             {dayNumber != null && (
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand/10 text-xs font-bold text-brand">
+              <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                 {dayNumber}
               </span>
             )}
-            <h3 className="font-semibold">{title}</h3>
+            <h3 className="font-semibold text-foreground">{title}</h3>
           </div>
-          <p className="mt-1 text-sm text-foreground/70">
+          <p className="mt-1 text-sm text-muted-foreground">
             {formatDateTime(startsAt)} IST
           </p>
         </div>
@@ -65,19 +65,21 @@ export function SessionCard({
             href={zoomJoinUrl!}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground transition hover:bg-brand/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             {status === "live" ? "Join live now" : "Join on Zoom"}
           </a>
         ) : status !== "past" ? (
-          <span className="text-sm text-foreground/60">Join link coming soon</span>
+          <span className="text-sm text-muted-foreground">
+            Join link coming soon
+          </span>
         ) : null}
 
         {/* Recording slot (Phase 5) */}
         {recording.state === "ready" ? (
           <RecordingPlayer recordingId={recording.recordingId} title={title} />
         ) : status === "past" ? (
-          <span className="text-sm text-foreground/60">
+          <span className="text-sm text-muted-foreground">
             {recording.state === "processing"
               ? "Recording is processing…"
               : "Recording will appear here soon"}

@@ -9,18 +9,26 @@ import type { NextConfig } from "next";
  * bootstrap script/style without a nonce. It still blocks any OTHER foreign
  * origin and (via frame-ancestors 'none') prevents clickjacking. A stricter
  * nonce-based CSP can be layered in later via the proxy/middleware if desired.
+ *
+ * DEV vs PROD: Next.js + Turbopack use eval() in DEVELOPMENT for HMR / fast
+ * refresh and React debugging, so dev needs 'unsafe-eval' (and ws:/http: for the
+ * HMR socket). React NEVER uses eval() in production, so the production CSP omits
+ * 'unsafe-eval' and stays strict.
  */
+const isDev = process.env.NODE_ENV !== "production";
+
 const csp = [
   "default-src 'self'",
   // Razorpay Checkout widget loads from checkout.razorpay.com.
-  "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com",
+  // 'unsafe-eval' is added in dev only (Turbopack HMR needs it).
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://checkout.razorpay.com`,
   "style-src 'self' 'unsafe-inline'",
   // Images: our hosts + Mux posters + the placeholder providers in remotePatterns.
   "img-src 'self' data: blob: https://*.supabase.co https://image.mux.com https://picsum.photos https://i.pravatar.cc https://images.unsplash.com",
   // Mux video streams.
   "media-src 'self' blob: https://stream.mux.com",
-  // Supabase API/realtime, Razorpay, Mux.
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.razorpay.com https://lumberjack.razorpay.com https://*.mux.com https://stream.mux.com",
+  // Supabase API/realtime, Razorpay, Mux (+ the local HMR websocket in dev).
+  `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.razorpay.com https://lumberjack.razorpay.com https://*.mux.com https://stream.mux.com${isDev ? " ws: http://localhost:*" : ""}`,
   // Razorpay opens its checkout in an iframe.
   "frame-src https://checkout.razorpay.com https://api.razorpay.com",
   "font-src 'self' data:",

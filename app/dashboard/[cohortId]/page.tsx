@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ArrowLeft, CalendarDays, Clock, Video } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { SessionCard } from "@/components/SessionCard";
 import { formatDateRange, sessionStatus } from "@/lib/format";
@@ -93,23 +94,37 @@ export default async function CohortDashboardPage({
     <div>
       <Link
         href="/dashboard"
-        className="text-sm text-foreground/60 hover:text-foreground"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
-        ← All my courses
+        <ArrowLeft className="size-4" />
+        All my courses
       </Link>
 
-      <h1 className="mt-3 text-2xl font-bold tracking-tight">
-        {cohort.course?.title ?? "Your program"}
-      </h1>
-      <p className="mt-1 text-foreground/70">
-        {cohort.name} · {formatDateRange(cohort.start_date, cohort.end_date)} ·
-        times shown in IST
-      </p>
+      {/* Course header card */}
+      <div className="mt-4 rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+        <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          {cohort.course?.title ?? "Your program"}
+        </h1>
+        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5">
+            <CalendarDays className="size-4" />
+            {cohort.name} ·{" "}
+            {formatDateRange(cohort.start_date, cohort.end_date)}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Clock className="size-4" />
+            Times shown in IST
+          </span>
+        </div>
+      </div>
 
-      <h2 className="mt-8 text-lg font-semibold">Session schedule</h2>
+      <h2 className="mt-10 flex items-center gap-2 font-display text-lg font-semibold text-foreground">
+        <Video className="size-5 text-primary" />
+        Session schedule
+      </h2>
 
       {sessions.length === 0 ? (
-        <div className="mt-4 rounded-2xl border border-dashed border-foreground/15 p-10 text-center text-foreground/70">
+        <div className="mt-4 rounded-2xl border border-dashed border-border bg-card p-10 text-center text-muted-foreground">
           The schedule will appear here as soon as sessions are published. Check
           back shortly before your start date.
         </div>
@@ -138,9 +153,8 @@ export default async function CohortDashboardPage({
         </ul>
       )}
 
-      <p className="mt-8 text-sm text-foreground/50">
-        Recordings of each session will appear here after it ends (rolling out in
-        a later update).
+      <p className="mt-8 text-sm text-muted-foreground">
+        Recordings of each session appear here after it ends.
       </p>
     </div>
   );

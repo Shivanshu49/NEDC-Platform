@@ -19,8 +19,20 @@ import type {
 function publicClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key, { auth: { persistSession: false } });
+  // Not configured, or pointed at the local-dev placeholder host (which doesn't
+  // exist) → skip the network call entirely so pages render instantly instead of
+  // waiting ~7s for a connection to time out.
+  if (!url || !key || url.includes("placeholder.supabase.co")) return null;
+  return createClient(url, key, {
+    auth: { persistSession: false },
+    global: {
+      // Resilience: never let a slow/unreachable Supabase hang a page render.
+      // Cap every read at 4s; on timeout the query returns empty and the page
+      // still renders (the helpers below already handle null/empty data).
+      fetch: (input, init) =>
+        fetch(input, { ...init, signal: AbortSignal.timeout(4000) }),
+    },
+  });
 }
 
 export type FeaturedProgram = { course: Course; cohorts: Cohort[] };

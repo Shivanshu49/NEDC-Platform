@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/lib/razorpay";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { sendEnrollmentEmail } from "@/lib/email";
+import { sendEnrollmentSms } from "@/lib/sms";
 import { logEvent } from "@/lib/log";
 
 export const runtime = "nodejs";
@@ -162,6 +163,18 @@ export async function POST(request: Request) {
         .update({ welcome_email_sent_at: null })
         .eq("id", enrollmentId);
     }
+
+    // SMS confirmation is PLANNED — this hook is a safe no-op until a provider is
+    // configured (lib/sms.ts). It never throws and never blocks enrollment.
+    const { data: profile } = await admin
+      .from("profiles")
+      .select("phone")
+      .eq("id", pay.user_id)
+      .maybeSingle();
+    await sendEnrollmentSms({
+      phone: profile?.phone ?? null,
+      cohortName: cohort?.name ?? "your NEDC program",
+    });
   }
 
   return NextResponse.json({ received: true });

@@ -64,7 +64,7 @@ export function EnrollButton({
         name: "NEDC",
         description: data.cohortName ?? cohortName,
         prefill: data.prefillEmail ? { email: data.prefillEmail } : undefined,
-        theme: { color: "#4f46e5" },
+        theme: { color: "#0a2f6b" }, // NEDC navy (matches the brand)
         // The webhook is authoritative; we just move the user along.
         handler: () => router.push("/dashboard?enrolled=1"),
         modal: { ondismiss: () => setLoading(false) },
@@ -84,7 +84,7 @@ export function EnrollButton({
         type="button"
         onClick={handleEnroll}
         disabled={loading}
-        className={`inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground transition hover:bg-brand/90 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 ${className}`}
+        className={`inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${className}`}
       >
         {loading ? "Processing…" : "Enroll now"}
       </button>

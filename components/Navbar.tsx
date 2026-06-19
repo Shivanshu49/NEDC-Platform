@@ -2,20 +2,37 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/Button";
+import { Logo } from "@/components/Logo";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
+// Single-page landing nav — anchors into the home sections. The leading "/"
+// means these also work from deeper pages (navigate home, then scroll). The
+// sticky-header offset is handled by each section's `scroll-mt-24`.
 const NAV_LINKS = [
-  { href: "/program", label: "Program" },
-  { href: "/speakers", label: "Speakers" },
-  { href: "/team", label: "Team" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/pricing", label: "Pricing" },
+  { href: "/#program", label: "Program" },
+  { href: "/#journey", label: "Journey" },
+  { href: "/#schemes", label: "Schemes" },
+  { href: "/#mentors", label: "Mentors" },
+  { href: "/#about", label: "About" },
+  { href: "/#faq", label: "FAQ" },
 ];
 
 const linkClass =
-  "rounded text-sm font-medium text-foreground/70 transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2";
+  "rounded-md text-sm font-medium text-foreground/80 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
+const mobileLinkClass =
+  "rounded-md px-2 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
+/** NEDC brand mark (icon only) — links to the homepage. */
+function Wordmark({ onClick }: { onClick?: () => void }) {
+  return (
+    <span onClick={onClick}>
+      <Logo className="h-11 w-auto sm:h-12" priority />
+    </span>
+  );
+}
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -23,6 +40,14 @@ export function Navbar() {
   const [authed, setAuthed] = useState<boolean | null>(null);
 
   useEffect(() => {
+    // Skip the auth check when Supabase isn't really configured (e.g. the local
+    // placeholder host), so the nav doesn't hang waiting for a dead endpoint.
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!url || url.includes("placeholder.supabase.co")) {
+      // Defer the state update out of the effect body to avoid a sync setState.
+      const id = setTimeout(() => setAuthed(false), 0);
+      return () => clearTimeout(id);
+    }
     const supabase = createSupabaseBrowserClient();
     supabase.auth.getUser().then(({ data }) => setAuthed(!!data.user));
     const {
@@ -34,24 +59,21 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-foreground/10 bg-background/80 backdrop-blur">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link
-          href="/"
-          className="text-lg font-extrabold tracking-tight"
-          onClick={() => setOpen(false)}
-        >
-          NEDC
-        </Link>
+    <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
+      <nav className="mx-auto flex max-w-[100rem] items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
+        <Wordmark onClick={() => setOpen(false)} />
 
-        {/* Desktop links */}
-        <div className="hidden items-center gap-6 md:flex">
+        {/* Center nav links */}
+        <div className="hidden items-center gap-7 lg:flex">
           {NAV_LINKS.map((link) => (
             <Link key={link.href} href={link.href} className={linkClass}>
               {link.label}
             </Link>
           ))}
+        </div>
 
+        {/* Right: auth + primary CTA */}
+        <div className="hidden items-center gap-5 lg:flex">
           {authed === true && (
             <>
               <Link href="/dashboard" className={linkClass}>
@@ -66,64 +88,53 @@ export function Navbar() {
           )}
           {authed === false && (
             <Link href="/login" className={linkClass}>
-              Log in
+              Sign in
             </Link>
           )}
-
-          <Button href="/pricing" className="px-5 py-2">
-            Enroll
+          <Button href="/#register" variant="accent" size="sm">
+            Register Now
           </Button>
         </div>
 
-        {/* Mobile hamburger / close button */}
+        {/* Mobile hamburger / close */}
         <button
           type="button"
-          className="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 md:hidden"
+          className="rounded-md p-1 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 lg:hidden"
           aria-label="Toggle menu"
           aria-expanded={open}
           aria-controls="mobile-menu"
           onClick={() => setOpen((v) => !v)}
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            aria-hidden="true"
-            focusable="false"
-          >
-            {open ? (
-              <path d="M6 6l12 12M18 6L6 18" />
-            ) : (
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            )}
-          </svg>
+          {open ? (
+            <X className="size-6" aria-hidden="true" />
+          ) : (
+            <Menu className="size-6" aria-hidden="true" />
+          )}
         </button>
       </nav>
 
       {/* Mobile dropdown */}
       {open && (
-        <div id="mobile-menu" className="border-t border-foreground/10 md:hidden">
-          <div className="flex flex-col gap-1 px-6 py-4">
+        <div id="mobile-menu" className="border-t border-border lg:hidden">
+          <div className="mx-auto flex max-w-[100rem] flex-col gap-1 px-4 py-4 sm:px-6 lg:px-8">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-lg px-2 py-2 text-sm font-medium text-foreground/80 hover:bg-foreground/4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+                className={mobileLinkClass}
                 onClick={() => setOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
 
+            <div className="my-2 h-px bg-border" />
+
             {authed === true && (
               <>
                 <Link
                   href="/dashboard"
-                  className="rounded-lg px-2 py-2 text-sm font-medium text-foreground/80 hover:bg-foreground/4"
+                  className={mobileLinkClass}
                   onClick={() => setOpen(false)}
                 >
                   Dashboard
@@ -131,7 +142,7 @@ export function Navbar() {
                 <form action="/auth/signout" method="post" className="px-2 py-2">
                   <button
                     type="submit"
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground"
+                    className="text-sm font-medium text-foreground/80 hover:text-primary"
                   >
                     Sign out
                   </button>
@@ -141,15 +152,15 @@ export function Navbar() {
             {authed === false && (
               <Link
                 href="/login"
-                className="rounded-lg px-2 py-2 text-sm font-medium text-foreground/80 hover:bg-foreground/4"
+                className={mobileLinkClass}
                 onClick={() => setOpen(false)}
               >
-                Log in
+                Sign in
               </Link>
             )}
 
-            <Button href="/pricing" className="mt-2">
-              Enroll
+            <Button href="/#register" variant="accent" className="mt-2">
+              Register Now
             </Button>
           </div>
         </div>

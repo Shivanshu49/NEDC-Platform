@@ -34,6 +34,8 @@ const LIMITERS = {
   checkout: makeLimiter(10, "1 m"),
   // Minting signed playback tokens — generous (a page can request several).
   recordingToken: makeLimiter(60, "1 m"),
+  // Public contact form — blunt spam/flooding.
+  contact: makeLimiter(5, "10 m"),
 } as const;
 
 /**
