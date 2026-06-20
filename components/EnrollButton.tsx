@@ -65,9 +65,43 @@ export function EnrollButton({
         description: data.cohortName ?? cohortName,
         prefill: data.prefillEmail ? { email: data.prefillEmail } : undefined,
         theme: { color: "#0a2f6b" }, // NEDC navy (matches the brand)
-        // The webhook is authoritative; we just move the user along.
-        handler: () => router.push("/dashboard?enrolled=1"),
+        // On success, confirm the handler signature server-side before moving on.
+        // The webhook still grants access; this is a fast, tamper-proof gate.
+        handler: async (response) => {
+          try {
+            const verifyRes = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+            const verifyData = await verifyRes.json().catch(() => ({}));
+            if (verifyRes.ok && verifyData.verified) {
+              router.push("/dashboard?enrolled=1");
+              return;
+            }
+            // An explicit mismatch is a real problem — don't pretend it worked.
+            setError(
+              "We couldn't confirm your payment. If you were charged, your access will appear shortly — otherwise please try again or contact support.",
+            );
+            setLoading(false);
+          } catch {
+            // Network hiccup confirming — the webhook is authoritative, so send
+            // them along; access shows up on the dashboard once it lands.
+            router.push("/dashboard?enrolled=1");
+          }
+        },
         modal: { ondismiss: () => setLoading(false) },
+      });
+      rzp.on("payment.failed", (resp) => {
+        setError(
+          resp?.error?.description ||
+            "Your payment couldn't be completed. Please try again.",
+        );
+        setLoading(false);
       });
       rzp.open();
     } catch {

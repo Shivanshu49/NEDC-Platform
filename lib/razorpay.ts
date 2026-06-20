@@ -32,3 +32,30 @@ export function verifyWebhookSignature(
   // timingSafeEqual throws if lengths differ, so guard first.
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
+
+/**
+ * Verify a Razorpay Checkout HANDLER signature — the one returned to the browser
+ * on a successful payment — with a timing-safe comparison. The signed message is
+ * `order_id|payment_id` and the key is the Razorpay Key SECRET. This is DISTINCT
+ * from verifyWebhookSignature (HMAC over the whole raw body, keyed with the
+ * WEBHOOK secret).
+ *
+ * This is a fast, tamper-proof UX confirmation only: it lets the browser fail
+ * closed if the success payload was forged. The webhook remains the SOURCE OF
+ * TRUTH that actually grants enrollment (see CLAUDE.md §5) — this never writes.
+ */
+export function verifyCheckoutSignature(
+  orderId: string,
+  paymentId: string,
+  signature: string,
+  secret: string | undefined,
+): boolean {
+  if (!secret) return false;
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(`${orderId}|${paymentId}`)
+    .digest("hex");
+  const a = Buffer.from(signature);
+  const b = Buffer.from(expected);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}

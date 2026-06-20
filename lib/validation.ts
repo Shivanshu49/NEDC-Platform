@@ -17,3 +17,14 @@ export const uuid = z.uuid();
 export const checkoutBody = z.object({
   cohortId: z.uuid(),
 });
+
+/**
+ * POST /api/verify-payment body — the response Razorpay Checkout hands back to
+ * the browser on a successful payment. All three fields are required; a missing
+ * one is rejected with a 400 before any signature work.
+ */
+export const verifyPaymentBody = z.object({
+  razorpay_order_id: z.string().min(1),
+  razorpay_payment_id: z.string().min(1),
+  razorpay_signature: z.string().min(1),
+});

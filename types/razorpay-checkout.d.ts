@@ -21,8 +21,24 @@ interface RazorpayCheckoutOptions {
   modal?: { ondismiss?: () => void };
 }
 
+/** Payload passed to the "payment.failed" event handler. */
+interface RazorpayFailureResponse {
+  error: {
+    code?: string;
+    description?: string;
+    source?: string;
+    step?: string;
+    reason?: string;
+    metadata?: { order_id?: string; payment_id?: string };
+  };
+}
+
 interface RazorpayCheckoutInstance {
   open: () => void;
+  on: (
+    event: "payment.failed",
+    handler: (response: RazorpayFailureResponse) => void,
+  ) => void;
 }
 
 interface Window {
