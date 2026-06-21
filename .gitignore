@@ -46,3 +46,6 @@ next-env.d.ts
 CLAUDE.md
 SETUP.md
 SECURITY.md
+
+# Uploaded source documents (mentor CVs, etc.) — hold private contact info, never commit
+/DOC-*.pdf
