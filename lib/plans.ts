@@ -35,7 +35,7 @@ export const PLANS: Plan[] = [
     id: "basic",
     name: "Basic",
     tagline: "Everything you need to learn the program and get certified.",
-    ctaLabel: "Enroll — Basic",
+    ctaLabel: "Enroll in Basic",
     features: [
       "All live mentor-led sessions",
       "Every session recorded in your dashboard",
@@ -47,10 +47,10 @@ export const PLANS: Plan[] = [
   {
     id: "premium",
     name: "Premium",
-    tagline: "Personal mentorship to actually launch — not just learn.",
+    tagline: "Personal mentorship to actually launch, not just learn.",
     badge: "Most popular",
     highlight: true,
-    ctaLabel: "Enroll — Premium",
+    ctaLabel: "Enroll in Premium",
     inheritsLabel: "Everything in Basic, plus:",
     features: [
       "1-on-1 mentorship sessions",

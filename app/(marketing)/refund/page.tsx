@@ -46,17 +46,17 @@ export default function RefundPage() {
             </h2>
             <ul className="list-disc space-y-2 pl-5 leading-relaxed text-muted-foreground">
               <li>
-                <span className="font-medium text-foreground">Full refund</span>{" "}
-                — if you cancel at least 7 days before the program start date, you
+                <span className="font-medium text-foreground">Full refund</span>:
+                if you cancel at least 7 days before the program start date, you
                 receive a full refund of the fee paid.
               </li>
               <li>
-                <span className="font-medium text-foreground">50% refund</span> —
+                <span className="font-medium text-foreground">50% refund</span>:
                 if you cancel within 7 days of the start date but before the
                 program begins, you receive a refund of 50% of the fee paid.
               </li>
               <li>
-                <span className="font-medium text-foreground">No refund</span> —
+                <span className="font-medium text-foreground">No refund</span>:
                 once the program has started, or once you have accessed any live
                 session or recording, the fee is non-refundable.
               </li>
@@ -70,7 +70,7 @@ export default function RefundPage() {
             <p className="leading-relaxed text-muted-foreground">
               Approved refunds are returned to your original payment method
               through our payment partner, Razorpay. Once approved, refunds are
-              typically processed within 5&ndash;7 business days; the time it
+              typically processed within 5 to 7 business days; the time it
               takes to appear in your account may vary depending on your bank or
               provider.
             </p>
@@ -88,7 +88,7 @@ export default function RefundPage() {
               >
                 {CONTACT.email}
               </a>{" "}
-              with your registration details — the name and email used to enrol,
+              with your registration details: the name and email used to enrol,
               the program and cohort, and your order or payment reference. We will
               review your request and confirm the outcome by email.
             </p>

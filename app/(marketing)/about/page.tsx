@@ -20,7 +20,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "About",
   description:
-    "About NEDC — our vision to build a strong entrepreneurial ecosystem, our mission, why entrepreneurship matters for national development, and the team behind it.",
+    "About NEDC: our vision to build a strong entrepreneurial ecosystem, our mission, why entrepreneurship matters for national development, and the team behind it.",
 };
 
 const OBJECTIVES = [
@@ -34,7 +34,7 @@ const WHY = [
   {
     icon: Rocket,
     title: "Employment generation",
-    body: "Entrepreneurs don't just find jobs — they create them for their communities.",
+    body: "Entrepreneurs don't just find jobs. They create them for their communities.",
   },
   {
     icon: Lightbulb,
@@ -77,7 +77,7 @@ export default async function AboutPage() {
           <p className="mt-6 max-w-2xl leading-relaxed text-muted-foreground">
             The National Entrepreneurship Development Center (NEDC) empowers
             individuals with entrepreneurial knowledge, practical skills, startup
-            guidance, and leadership development — turning aspiring founders into
+            guidance, and leadership development, turning aspiring founders into
             creators of opportunity.
           </p>
         </Container>
@@ -154,7 +154,7 @@ export default async function AboutPage() {
         <Container>
           <SectionHeading
             eyebrow="Why entrepreneurship?"
-            title="More than a career — a tool for nation building"
+            title="More than a career, a tool for nation building"
             center
           />
           <div className="mt-14 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">

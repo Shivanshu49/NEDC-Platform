@@ -7,7 +7,7 @@ import { CONTACT } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Shipping & Delivery Policy",
   description:
-    "How NEDC delivers access to its digital Entrepreneurship Development Program (EDP) — there is no physical shipment.",
+    "How NEDC delivers access to its digital Entrepreneurship Development Program (EDP). There is no physical shipment.",
 };
 
 export default function ShippingPage() {
@@ -34,7 +34,7 @@ export default function ShippingPage() {
         <div className="mt-12 space-y-10">
           <div className="space-y-3">
             <h2 className="font-display text-xl font-bold text-foreground">
-              A digital program — no physical shipment
+              A digital program with no physical shipment
             </h2>
             <p className="leading-relaxed text-muted-foreground">
               The Entrepreneurship Development Program (EDP) is delivered entirely
@@ -50,7 +50,7 @@ export default function ShippingPage() {
             </h2>
             <p className="leading-relaxed text-muted-foreground">
               Once your payment is successfully confirmed, access is delivered
-              electronically — immediately or shortly afterwards:
+              electronically, immediately or shortly afterwards:
             </p>
             <ul className="list-disc space-y-2 pl-5 leading-relaxed text-muted-foreground">
               <li>

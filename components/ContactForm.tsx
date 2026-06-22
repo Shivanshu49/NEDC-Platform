@@ -23,7 +23,7 @@ export function ContactForm() {
         <div>
           <p className="font-semibold text-foreground">Message sent</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Thanks for reaching out — our team will get back to you soon.
+            Thanks for reaching out. Our team will get back to you soon.
           </p>
         </div>
       </div>

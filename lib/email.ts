@@ -94,7 +94,7 @@ export async function sendEnrollmentEmail(params: {
   const { error } = await resend.emails.send({
     from,
     to: params.to,
-    subject: `You're enrolled — ${params.cohortName}`,
+    subject: `You're enrolled in ${params.cohortName}`,
     html,
   });
   if (error) {

@@ -64,7 +64,7 @@ const FOCUS_ICONS: Record<string, LucideIcon> = {
 // Program-at-a-glance stats (the floating bar under the hero). Honest program
 // facts only — no fabricated counts (see CLAUDE.md credibility rule).
 const STATS: { figure: string; label: string; Icon: LucideIcon; accent?: boolean }[] = [
-  { figure: "5–6", label: "Day immersive program", Icon: CalendarDays },
+  { figure: "5 to 6", label: "Day immersive program", Icon: CalendarDays },
   { figure: "100%", label: "Online & hybrid delivery", Icon: Wifi },
   { figure: "Pan-India", label: "Open to every district", Icon: MapPin },
   { figure: "Certified", label: "Completion certificate by NEDC", Icon: BadgeCheck, accent: true },
@@ -173,7 +173,7 @@ export default async function HomePage() {
             <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
               NEDC&apos;s Entrepreneurship Development Program gives India&apos;s youth,
               students, women, and aspiring founders the skills, mindset, and
-              mentorship to turn ideas into real ventures &mdash; online &amp; hybrid,
+              mentorship to turn ideas into real ventures, delivered online &amp; hybrid,
               with certification.
             </p>
 
@@ -193,7 +193,7 @@ export default async function HomePage() {
                 size="lg"
                 className="w-full hover:-translate-y-0.5 sm:w-auto"
               >
-                {registrationOpen ? "Register now" : "Register — Opening Soon"}
+                {registrationOpen ? "Register now" : "Registration opening soon"}
               </Button>
             </div>
 
@@ -456,8 +456,8 @@ export default async function HomePage() {
             </div>
           ) : (
             <p className="mt-8 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
-              Our mentor panel — founders and experts who&apos;ve built real
-              businesses — will be introduced here as the program lineup is
+              Our mentor panel of founders and experts who&apos;ve built real
+              businesses will be introduced here as the program lineup is
               confirmed. Real people only; no placeholders.
             </p>
           )}
@@ -476,7 +476,7 @@ export default async function HomePage() {
           <SectionHeading
             eyebrow="Success stories"
             title="From our learners"
-            subtitle="Our first cohorts are just getting started. Real graduate stories — with names, outcomes, and consent — will be published right here."
+            subtitle="Our first cohorts are just getting started. Real graduate stories, with names, outcomes, and consent, will be published right here."
             center
           />
           <div className="reveal mx-auto mt-12 max-w-2xl">
@@ -494,7 +494,7 @@ export default async function HomePage() {
                 <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
                   We believe proof should be real. As learners complete the
                   Entrepreneurship Development Program and start building, we&apos;ll
-                  share their genuine journeys — never fabricated ones.
+                  share their genuine journeys, never fabricated ones.
                 </p>
                 <div className="mt-7">
                   <Button href="#register" variant="primary">
@@ -557,7 +557,7 @@ export default async function HomePage() {
                 Ready to become a job creator?
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-pretty text-primary-foreground/80">
-                Join NEDC&apos;s Entrepreneurship Development Program — learn the
+                Join NEDC&apos;s Entrepreneurship Development Program and learn the
                 mindset and skills to launch your own business and grow from job
                 seeker to job creator.
               </p>

@@ -22,19 +22,19 @@ const POINTS = [
     Icon: Compass,
     accent: false,
     title: "Think like a founder",
-    body: "Shift from looking for a job to spotting opportunities — learn to validate an idea, weigh risk, and make decisions like an owner.",
+    body: "Shift from looking for a job to spotting opportunities. Learn to validate an idea, weigh risk, and make decisions like an owner.",
   },
   {
     Icon: Wrench,
     accent: false,
     title: "Build real business skills",
-    body: "Practical training in planning, finance basics, marketing, and the government schemes you can tap — skills you apply to your own venture.",
+    body: "Practical training in planning, finance basics, marketing, and the government schemes you can tap, all skills you apply to your own venture.",
   },
   {
     Icon: MessageSquareHeart,
     accent: true,
     title: "Get guidance, not just lectures",
-    body: "Real mentorship and a step-by-step path, so you move forward with people who answer your questions — not only watch sessions alone.",
+    body: "Real mentorship and a step-by-step path, so you move forward with people who answer your questions, not only watch sessions alone.",
   },
 ] as const;
 
@@ -47,14 +47,14 @@ export function WhyNedc() {
           <div className="max-w-xl">
             <SectionHeading
               eyebrow="Why NEDC"
-              title="More than a course — a mindset shift."
+              title="More than a course. A mindset shift."
             />
 
             <p className="mt-6 text-pretty text-lg leading-relaxed text-muted-foreground">
               Most people are taught to look for a job. NEDC teaches you to
               create one. Through practical training, real mentorship, and a
               step-by-step path, you&apos;ll learn to think and build like an
-              entrepreneur — and turn your idea into a venture.
+              entrepreneur, and turn your idea into a venture.
             </p>
 
             <ul className="mt-10 space-y-6">

@@ -57,7 +57,7 @@ export const FOCUS_AREAS = [
   },
   {
     title: "Digital Entrepreneurship",
-    body: "Grow online — digital products, marketing, and modern tools.",
+    body: "Grow online with digital products, marketing, and modern tools.",
     icon: "Globe",
   },
   {
@@ -102,12 +102,12 @@ export const EDP_VIDEO_ID = "FpgvOhurEz4";
 
 /** "What is the EDP?" — short, plain-language intro (from the official EDP brief). */
 export const EDP_INTRO =
-  "The Entrepreneurship Development Program (EDP) empowers young and aspiring business-minded people with insight into every facet of starting a new business — and the sustainable resources to settle into a career of their own. Every session is tailor-made to train you to start your own business or venture.";
+  "The Entrepreneurship Development Program (EDP) empowers young and aspiring business-minded people with insight into every facet of starting a new business, along with the sustainable resources to settle into a career of their own. Every session is tailor-made to train you to start your own business or venture.";
 
 /** Objectives of the programme (from the official EDP brief). */
 export const EDP_OBJECTIVES = [
-  "Prepare aspiring and existing entrepreneurs — women and men — to establish their own business activity.",
-  "Guide you on generating funds for your project — whether a manufacturing unit, a service unit, or trading.",
+  "Prepare aspiring and existing entrepreneurs, both women and men, to establish their own business activity.",
+  "Guide you on generating funds for your project, whether a manufacturing unit, a service unit, or trading.",
   "Help you build a complete Business Plan and Project Report for your venture.",
 ];
 
@@ -121,7 +121,7 @@ export const EDP_CURRICULUM = [
     day: 1,
     theme: "Foundations & setting up",
     sessions: [
-      "Introduction to the EDP — entrepreneur qualities, mindset, and an ease-of-doing-business approach",
+      "Introduction to the EDP: entrepreneur qualities, mindset, and an ease-of-doing-business approach",
       "Procedure for setting up a small business, including choosing your business entity",
     ],
   },
@@ -129,7 +129,7 @@ export const EDP_CURRICULUM = [
     day: 2,
     theme: "Government support & leadership",
     sessions: [
-      "Government initiatives for entrepreneurs — PMEGP, MUDRA & Stand-Up India schemes",
+      "Government initiatives for entrepreneurs: PMEGP, MUDRA & Stand-Up India schemes",
       "Planning, managing & leadership",
     ],
   },
@@ -137,7 +137,7 @@ export const EDP_CURRICULUM = [
     day: 3,
     theme: "Opportunities & markets",
     sessions: [
-      "Business opportunities in domestic & international markets — and your own business ideas",
+      "Business opportunities in domestic & international markets, plus your own business ideas",
       "Market overview, direct selling, target market, competition & marketing channels",
     ],
   },
@@ -145,7 +145,7 @@ export const EDP_CURRICULUM = [
     day: 4,
     theme: "Finance & a real-world case",
     sessions: [
-      "Composite loans — term loans for fixed assets and working-capital facilities",
+      "Composite loans: term loans for fixed assets and working-capital facilities",
       "Case study of a real business unit",
     ],
   },
@@ -153,7 +153,7 @@ export const EDP_CURRICULUM = [
     day: 5,
     theme: "Project report & validation",
     sessions: [
-      "Writing a Project Report — break-even point (BEP) and ratios for economic viability",
+      "Writing a Project Report: break-even point (BEP) and ratios for economic viability",
       "Feedback & valedictory session",
     ],
   },

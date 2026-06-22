@@ -50,7 +50,7 @@ export function Logo({
       src="/nedc-icon.svg"
       // Decorative when the visible wordmark already names the brand; otherwise
       // the icon itself carries the accessible name.
-      alt={withWordmark ? "" : "NEDC — National Entrepreneurship Development Center"}
+      alt={withWordmark ? "" : "NEDC, National Entrepreneurship Development Center"}
       // Intrinsic size = the icon SVG's square viewBox, so `h-* w-auto` keeps
       // the correct 1:1 proportion.
       width={852}

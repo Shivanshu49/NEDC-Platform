@@ -17,7 +17,7 @@ import { CONTACT } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with NEDC — call, email, or message us, or send an inquiry about the Entrepreneurship Development Program (EDP).",
+    "Get in touch with NEDC. Call, email, or message us, or send an inquiry about the Entrepreneurship Development Program (EDP).",
 };
 
 const SOCIALS = [

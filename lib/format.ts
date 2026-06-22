@@ -70,12 +70,12 @@ export function formatDateRange(startIso: string, endIso: string): string {
       month: "long",
       year: "numeric",
     });
-    return `${start.getDate()}–${end.getDate()} ${monthYear}`;
+    return `${start.getDate()} to ${end.getDate()} ${monthYear}`;
   }
   const opts: Intl.DateTimeFormatOptions = {
     day: "numeric",
     month: "long",
     year: "numeric",
   };
-  return `${start.toLocaleDateString("en-IN", opts)} – ${end.toLocaleDateString("en-IN", opts)}`;
+  return `${start.toLocaleDateString("en-IN", opts)} to ${end.toLocaleDateString("en-IN", opts)}`;
 }

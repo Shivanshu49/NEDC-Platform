@@ -37,7 +37,7 @@ import {
 
 export const revalidate = 300;
 export const metadata: Metadata = {
-  title: "EDP Program — Register",
+  title: "EDP Program: Register",
   description:
     "The NEDC Entrepreneurship Development Program (EDP): online & hybrid startup training. What it is, the 5-day curriculum, focus areas, eligibility, benefits, certification, and registration.",
 };
@@ -197,7 +197,7 @@ export default async function ProgramPage() {
             <div>
               <SectionHeading eyebrow="Eligibility" title="Who can join" />
               <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-                The EDP is open to anyone with the ambition to build — no prior
+                The EDP is open to anyone with the ambition to build. No prior
                 business experience required.
               </p>
               <div className="mt-6 flex flex-wrap gap-2.5">
@@ -225,7 +225,7 @@ export default async function ProgramPage() {
             center
             eyebrow="Register"
             title="Reserve your seat"
-            subtitle="Two plans — Basic, or Premium with 1-on-1 mentorship. Secure payment via Razorpay (UPI, cards & netbanking). On success you'll get an instant receipt and email confirmation."
+            subtitle="Two plans: Basic, or Premium with 1-on-1 mentorship. Secure payment via Razorpay (UPI, cards & netbanking). On success you'll get an instant receipt and email confirmation."
           />
 
           {nextCohort ? (

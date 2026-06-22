@@ -69,7 +69,7 @@ export function LoginForm({
         </h2>
         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
           We sent a magic link to <strong className="text-foreground">{email}</strong>.
-          Click it to finish signing in — you can close this tab.
+          Click it to finish signing in. You can close this tab.
         </p>
         <button
           type="button"

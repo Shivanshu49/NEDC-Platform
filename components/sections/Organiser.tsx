@@ -28,13 +28,13 @@ const GRAIN =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
 const HIGHLIGHTS: { icon: LucideIcon; text: string }[] = [
-  { icon: GraduationCap, text: "Ph.D. & M.Sc. — Analytical Chemistry" },
+  { icon: GraduationCap, text: "Ph.D. & M.Sc. in Analytical Chemistry" },
   {
     icon: Building2,
-    text: "Professor & Dean, Students' Welfare — Galgotias College of Engineering & Technology",
+    text: "Professor & Dean, Students' Welfare, Galgotias College of Engineering & Technology",
   },
-  { icon: Award, text: "Mentor — NITTTR–AICTE training program" },
-  { icon: Mic2, text: "Host — YouTube podcast on technology & innovation" },
+  { icon: Award, text: "Mentor, NITTTR-AICTE training program" },
+  { icon: Mic2, text: "Host of a YouTube podcast on technology & innovation" },
 ];
 
 export function Organiser() {
@@ -137,7 +137,7 @@ export function Organiser() {
             Founder &amp; Organiser, NEDC
           </p>
           <p className="mt-1 text-pretty text-sm font-medium text-primary-foreground/80">
-            Professor &amp; Dean, Students&apos; Welfare — Galgotias College of
+            Professor &amp; Dean, Students&apos; Welfare, Galgotias College of
             Engineering &amp; Technology, Greater Noida
           </p>
 
@@ -152,8 +152,8 @@ export function Organiser() {
             <p>
               A self-motivated academic leader with keen analytical abilities and
               deep subject expertise, he has extensive experience mentoring,
-              training, and developing people — and is a Mentor of the
-              NITTTR–AICTE training program. He has delivered numerous talks on
+              training, and developing people, and is a Mentor of the
+              NITTTR-AICTE training program. He has delivered numerous talks on
               new technologies and emerging challenges, and carries that mission
               to a wider audience through his YouTube podcast.
             </p>

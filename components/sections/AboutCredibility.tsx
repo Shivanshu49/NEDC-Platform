@@ -57,8 +57,8 @@ export function AboutCredibility() {
             </div>
             <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
               An independent entrepreneurship{" "}
-              <span className="font-semibold text-foreground">learning platform</span>{" "}
-              — a mentor-led Entrepreneurship Development Program (EDP), delivered
+              <span className="font-semibold text-foreground">learning platform</span>.
+              A mentor-led Entrepreneurship Development Program (EDP), delivered
               online &amp; hybrid, with a Certificate of Completion.
             </p>
             <ul className="mt-5 space-y-2.5 text-sm text-muted-foreground">
@@ -100,7 +100,7 @@ export function AboutCredibility() {
               <span className="font-semibold text-foreground">NIESBUD</span>.
             </p>
             <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
-              We help you understand and access government initiatives — we do
+              We help you understand and access government initiatives. We do
               not run them.
             </p>
           </OffsetCard>

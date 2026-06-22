@@ -91,7 +91,7 @@ export function PricingPlans({
                 )}
               </p>
               <p className="mt-2 text-sm font-medium text-muted-foreground">
-                {dateLabel ?? "Starts ~15 June — dates to be announced"}
+                {dateLabel ?? "Starts ~15 June, dates to be announced"}
               </p>
               {plan.highlight && upgradeDiff !== null && upgradeDiff > 0 && (
                 <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">
@@ -155,7 +155,7 @@ export function PricingPlans({
                   size="lg"
                   className="w-full"
                 >
-                  Register — Opening Soon
+                  Registration opening soon
                 </Button>
               )}
             </div>

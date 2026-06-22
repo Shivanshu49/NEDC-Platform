@@ -95,7 +95,7 @@ export function EnrollButton({
             }
             // An explicit mismatch is a real problem — don't pretend it worked.
             setError(
-              "We couldn't confirm your payment. If you were charged, your access will appear shortly — otherwise please try again or contact support.",
+              "We couldn't confirm your payment. If you were charged, your access will appear shortly. Otherwise please try again or contact support.",
             );
             setLoading(false);
           } catch {

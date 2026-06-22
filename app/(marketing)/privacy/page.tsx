@@ -45,15 +45,13 @@ export default function PrivacyPage() {
               <li>
                 <span className="font-medium text-foreground">
                   Account details
-                </span>{" "}
-                — your name, email address, and phone number when you register or
-                contact us.
+                </span>: your name, email address, and phone number when you
+                register or contact us.
               </li>
               <li>
                 <span className="font-medium text-foreground">
                   Payment metadata
-                </span>{" "}
-                — order and transaction identifiers and payment status received
+                </span>: order and transaction identifiers and payment status received
                 from our payment partner. NEDC does{" "}
                 <span className="font-medium text-foreground">not</span> store
                 your card, UPI, or netbanking credentials; those are handled
@@ -62,9 +60,8 @@ export default function PrivacyPage() {
               <li>
                 <span className="font-medium text-foreground">
                   Usage information
-                </span>{" "}
-                — basic technical data needed to keep your session secure and the
-                platform working.
+                </span>: basic technical data needed to keep your session secure
+                and the platform working.
               </li>
             </ul>
           </div>
@@ -94,22 +91,24 @@ export default function PrivacyPage() {
             </p>
             <ul className="list-disc space-y-2 pl-5 leading-relaxed text-muted-foreground">
               <li>
-                <span className="font-medium text-foreground">Supabase</span> —
-                secure database, authentication, and storage of your account data.
+                <span className="font-medium text-foreground">Supabase</span>{" "}
+                handles our secure database, authentication, and storage of your
+                account data.
               </li>
               <li>
-                <span className="font-medium text-foreground">Razorpay</span> —
-                payment processing; they handle your payment credentials directly.
+                <span className="font-medium text-foreground">Razorpay</span>{" "}
+                handles payment processing, including your payment credentials,
+                directly.
               </li>
               <li>
-                <span className="font-medium text-foreground">Resend</span> —
-                delivery of transactional email such as receipts and join links.
+                <span className="font-medium text-foreground">Resend</span>{" "}
+                delivers transactional email such as receipts and join links.
               </li>
               <li>
                 <span className="font-medium text-foreground">
                   Our SMS provider
                 </span>{" "}
-                — delivery of confirmation messages.
+                delivers confirmation messages.
               </li>
             </ul>
           </div>

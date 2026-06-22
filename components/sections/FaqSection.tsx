@@ -24,7 +24,7 @@ const FAQS: QA[] = [
   {
     question: "Who is this for?",
     answer:
-      "Students, youth, women, rural and agri aspirants, and working professionals across India. No prior business experience is needed — just the intent to learn how to build one.",
+      "Students, youth, women, rural and agri aspirants, and working professionals across India. No prior business experience is needed, just the intent to learn how to build one.",
   },
   {
     question: "Is it fully online?",
@@ -34,15 +34,15 @@ const FAQS: QA[] = [
   {
     question: "How long is it?",
     answer:
-      "It is a focused, multi-day immersive program. The final schedule — exact days and timings — is announced at registration so you can plan ahead.",
+      "It is a focused, multi-day immersive program. The final schedule (exact days and timings) is announced at registration so you can plan ahead.",
   },
   {
-    question: "What do I get — is there a certificate?",
+    question: "What do I get, and is there a certificate?",
     answer:
-      "Yes — a Certificate of Completion from NEDC, along with session recordings to revisit, ready-to-use templates, and guidance from mentors throughout the program.",
+      "Yes. A Certificate of Completion from NEDC, along with session recordings to revisit, ready-to-use templates, and guidance from mentors throughout the program.",
   },
   {
-    question: "How do I pay — is it secure?",
+    question: "How do I pay, and is it secure?",
     answer:
       "Payments are handled securely through Razorpay (UPI, cards, and net banking). You receive instant confirmation by email and SMS once your registration is complete.",
   },
@@ -54,7 +54,7 @@ const FAQS: QA[] = [
   {
     question: "Do I need a business idea already?",
     answer:
-      "Not at all. The program is built to help you find, shape, and test an idea — whether you are starting from a blank page or refining something you already have in mind.",
+      "Not at all. The program is built to help you find, shape, and test an idea, whether you are starting from a blank page or refining something you already have in mind.",
   },
 ];
 

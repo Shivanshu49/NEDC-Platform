@@ -32,7 +32,7 @@ export function NewsletterForm({
         } ${align === "center" ? "justify-center" : ""}`}
       >
         <CheckCircle2 className="size-4" />
-        You&apos;re on the list — we&apos;ll be in touch.
+        You&apos;re on the list, and we&apos;ll be in touch.
       </p>
     );
   }

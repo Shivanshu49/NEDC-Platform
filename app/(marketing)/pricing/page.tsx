@@ -11,7 +11,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Pricing & enroll",
   description:
-    "Two simple plans for the NEDC live online program — Basic, or Premium with 1-on-1 mentorship. Pay once for your cohort.",
+    "Two simple plans for the NEDC live online program: Basic, or Premium with 1-on-1 mentorship. Pay once for your cohort.",
 };
 
 export default async function PricingPage() {
@@ -34,7 +34,7 @@ export default async function PricingPage() {
         <SectionHeading
           eyebrow="Pricing"
           title="One program, two ways to join"
-          subtitle="No subscriptions, no hidden charges. Pay once for your cohort — start with Basic, or go Premium for personal 1-on-1 mentorship."
+          subtitle="No subscriptions, no hidden charges. Pay once for your cohort. Start with Basic, or go Premium for personal 1-on-1 mentorship."
           center
           as="h1"
         />
@@ -69,7 +69,7 @@ export default async function PricingPage() {
 
         <p className="mt-12 flex items-center justify-center gap-2 text-center text-sm text-muted-foreground">
           <ShieldCheck className="size-4 text-success" />
-          Secure payment via Razorpay — UPI, cards &amp; netbanking. Prices in INR.
+          Secure payment via Razorpay: UPI, cards &amp; netbanking. Prices in INR.
         </p>
       </Container>
     </section>

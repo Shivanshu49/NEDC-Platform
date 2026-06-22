@@ -66,7 +66,7 @@ export function FounderJourney() {
       <Container>
         <SectionHeading
           eyebrow="Your path"
-          title="The founder journey — end to end"
+          title="The founder journey, end to end"
           subtitle="This isn't a one-off class. It's ongoing support that walks with you from a first spark of an idea to a venture and a community that keeps you going."
         />
 

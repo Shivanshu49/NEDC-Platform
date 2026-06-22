@@ -152,7 +152,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col gap-3 border-t border-border pt-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} NEDC — National Entrepreneurship Development Center. All rights reserved.</p>
+          <p>© {year} NEDC, National Entrepreneurship Development Center. All rights reserved.</p>
           <nav className="flex flex-wrap items-center gap-x-4 gap-y-1">
             {[
               { href: "/terms", label: "Terms" },

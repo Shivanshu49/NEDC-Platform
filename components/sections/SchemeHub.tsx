@@ -87,7 +87,7 @@ const SCHEMES: Record<SchemeKey, Scheme> = {
     key: "odop",
     name: "ODOP (One District One Product)",
     description: "One-district-one-product opportunities.",
-    why: "Taps district-level product opportunities — ideal for rural & agri ideas.",
+    why: "Taps district-level product opportunities, ideal for rural & agri ideas.",
     href: "https://www.startupindia.gov.in",
     Icon: MapPin,
   },
@@ -226,7 +226,7 @@ export function SchemeHub() {
           center
           eyebrow="Government schemes"
           title="Find the right government scheme for your idea."
-          subtitle="India backs new founders with real programmes — from recognition and registration to collateral-free loans. Explore the official initiatives, then use the quick navigator to see which one fits you."
+          subtitle="India backs new founders with real programmes, from recognition and registration to collateral-free loans. Explore the official initiatives, then use the quick navigator to see which one fits you."
         />
 
         {/* ---------------------------------------------------------------- *
@@ -403,8 +403,8 @@ export function SchemeHub() {
             <span className="font-semibold text-foreground">
               independent organization and not a government body
             </span>
-            . We only help you understand and access these official initiatives —
-            we do not provide, approve, or guarantee any scheme or its benefits.
+            . We only help you understand and access these official initiatives.
+            We do not provide, approve, or guarantee any scheme or its benefits.
             Eligibility and scheme details may change; always confirm the latest
             information on the official government portal before applying.
           </p>

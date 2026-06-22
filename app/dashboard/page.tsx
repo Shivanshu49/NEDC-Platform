@@ -58,7 +58,7 @@ export default async function DashboardPage({
         <div className="mt-6 flex items-start gap-3 rounded-2xl border border-success/20 bg-success/5 p-4">
           <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-success" />
           <p className="text-sm text-foreground">
-            <span className="font-semibold">Payment received — welcome aboard!</span>{" "}
+            <span className="font-semibold">Payment received. Welcome aboard!</span>{" "}
             If your course isn&apos;t showing yet, give it a moment and refresh.
           </p>
         </div>

@@ -29,11 +29,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default:
-      "NEDC — National Entrepreneurship Development Center | Become a Job Creator",
+      "NEDC, National Entrepreneurship Development Center | Become a Job Creator",
     template: "%s | NEDC",
   },
   description:
-    "NEDC runs the Entrepreneurship Development Program (EDP) — online & hybrid training that turns students, youth, professionals, women, and rural innovators into startup founders and job creators. Registrations opening soon.",
+    "NEDC runs the Entrepreneurship Development Program (EDP), online & hybrid training that turns students, youth, professionals, women, and rural innovators into startup founders and job creators. Registrations opening soon.",
   keywords: [
     "NEDC",
     "Entrepreneurship Development Program",
@@ -46,15 +46,15 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: "website",
-    siteName: "NEDC — National Entrepreneurship Development Center",
-    title: "NEDC — Transforming Youth into Entrepreneurs",
+    siteName: "NEDC, National Entrepreneurship Development Center",
+    title: "NEDC: Transforming Youth into Entrepreneurs",
     description:
       "Join the Entrepreneurship Development Program (EDP). Learn • Innovate • Build • Lead. Registrations opening soon.",
     url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",
-    title: "NEDC — Transforming Youth into Entrepreneurs",
+    title: "NEDC: Transforming Youth into Entrepreneurs",
     description:
       "Join the Entrepreneurship Development Program (EDP). Learn • Innovate • Build • Lead.",
   },

@@ -80,7 +80,7 @@ export default async function LoginPage({
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
                 Enrolled students sign in here. New? The same form creates your
-                account — no password needed.
+                account, no password needed.
               </p>
               <LoginForm next={next} initialError={error} />
             </div>

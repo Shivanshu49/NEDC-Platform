@@ -26,7 +26,7 @@ const points = [
   },
   {
     icon: BadgeCheck,
-    text: "Reflects the core skills you practised — ideation, validation, and building a viable business plan.",
+    text: "Reflects the core skills you practised: ideation, validation, and building a viable business plan.",
   },
   {
     icon: Share2,
@@ -47,7 +47,7 @@ export function Certification() {
             <SectionHeading
               eyebrow="Certification"
               title="Earn a Certificate of Completion from NEDC."
-              subtitle="Proof of your entrepreneurship training — a Certificate of Completion issued by NEDC when you finish the program."
+              subtitle="Proof of your entrepreneurship training, a Certificate of Completion issued by NEDC when you finish the program."
             />
 
             <ul className="mt-8 space-y-4">

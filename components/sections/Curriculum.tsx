@@ -21,7 +21,7 @@ export function Curriculum() {
           center
           eyebrow="Curriculum"
           title="Your 5-day plan, session by session"
-          subtitle="Two focused live sessions each day — from the entrepreneurial mindset to a finished, fundable project report."
+          subtitle="Two focused live sessions each day, from the entrepreneurial mindset to a finished, fundable project report."
         />
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
