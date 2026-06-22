@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {
   ArrowRight,
   Award,
+  CalendarDays,
   CheckCircle2,
   ClipboardList,
   Globe,
@@ -19,18 +20,26 @@ import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { SectionHeading } from "@/components/SectionHeading";
 import { OffsetCard } from "@/components/OffsetCard";
-import { EnrollButton } from "@/components/EnrollButton";
+import { PricingPlans } from "@/components/PricingPlans";
+import { VideoEmbed } from "@/components/VideoEmbed";
+import { Curriculum } from "@/components/sections/Curriculum";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { EmptyState } from "@/components/EmptyState";
-import { getFeaturedProgram } from "@/lib/queries";
-import { formatDateRange, formatINR } from "@/lib/format";
-import { ELIGIBILITY, FOCUS_AREAS } from "@/lib/content";
+import { getFeaturedProgram, pickNextCohort } from "@/lib/queries";
+import { formatDateRange } from "@/lib/format";
+import {
+  EDP_INTRO,
+  EDP_OBJECTIVES,
+  EDP_VIDEO_ID,
+  ELIGIBILITY,
+  FOCUS_AREAS,
+} from "@/lib/content";
 
 export const revalidate = 300;
 export const metadata: Metadata = {
   title: "EDP Program — Register",
   description:
-    "The NEDC Entrepreneurship Development Program (EDP): online & hybrid startup training. Focus areas, eligibility, benefits, certification, and registration. Registrations opening soon.",
+    "The NEDC Entrepreneurship Development Program (EDP): online & hybrid startup training. What it is, the 5-day curriculum, focus areas, eligibility, benefits, certification, and registration.",
 };
 
 const FOCUS_ICONS: Record<string, LucideIcon> = {
@@ -56,30 +65,69 @@ const BENEFITS = [
 export default async function ProgramPage() {
   const featured = await getFeaturedProgram();
   const cohorts = featured?.cohorts ?? [];
+  const nextCohort = pickNextCohort(cohorts);
+  const registrationOpen = Boolean(nextCohort?.enroll_open);
+  const dateLabel = nextCohort
+    ? formatDateRange(nextCohort.start_date, nextCohort.end_date)
+    : undefined;
+  const otherBatches = cohorts.filter(
+    (c) =>
+      c.id !== nextCohort?.id &&
+      c.status !== "completed" &&
+      c.status !== "cancelled",
+  );
 
   return (
     <>
-      {/* Hero / intro */}
+      {/* Hero / intro + video */}
       <section className="bg-panel/50 py-16 sm:py-24">
         <Container>
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-1.5 text-sm font-semibold text-brand">
-            <span className="size-2 rounded-full bg-brand" />
-            Registrations Opening Soon
-          </span>
-          <h1 className="font-display mt-5 max-w-3xl text-balance text-fluid-h1 font-extrabold tracking-tight text-foreground">
-            Entrepreneurship Development Program (EDP)
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            A focused, startup-oriented program that takes you from skill
-            development to startup development — delivered online and hybrid, with
-            a certificate by NEDC.
-          </p>
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-1.5 text-sm font-semibold text-brand">
+                <span className="size-2 rounded-full bg-brand" />
+                Registrations Opening Soon
+              </span>
+              <h1 className="font-display mt-5 max-w-3xl text-balance text-fluid-h1 font-extrabold tracking-tight text-foreground">
+                Entrepreneurship Development Program (EDP)
+              </h1>
+              <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+                {EDP_INTRO}
+              </p>
+
+              <ul className="mt-7 space-y-3">
+                {EDP_OBJECTIVES.map((objective) => (
+                  <li key={objective} className="flex gap-3">
+                    <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-success" />
+                    <span className="text-sm leading-relaxed text-foreground">
+                      {objective}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-8">
+                <Button href="#register" variant="accent" size="lg">
+                  Register Now
+                  <ArrowRight className="size-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Intro video */}
+            <div>
+              <VideoEmbed videoId={EDP_VIDEO_ID} title="What is the NEDC EDP?" />
+              <p className="mt-3 text-center text-sm text-muted-foreground">
+                A quick introduction to the program
+              </p>
+            </div>
+          </div>
 
           {/* Quick facts */}
-          <dl className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: MonitorPlay, k: "Mode", v: "Online / Hybrid" },
-              { icon: Sparkles, k: "Starts", v: "~15 June (TBA)" },
+              { icon: CalendarDays, k: "Duration", v: "5 days · 2 sessions/day" },
               { icon: Award, k: "Certification", v: "Certificate by NEDC" },
               { icon: Users, k: "Open to", v: "Students to rural founders" },
             ].map((f) => (
@@ -99,23 +147,13 @@ export default async function ProgramPage() {
               </div>
             ))}
           </dl>
-
-          <div className="mt-8">
-            <Button href="#register" variant="accent" size="lg">
-              Register Now
-              <ArrowRight className="size-4" />
-            </Button>
-          </div>
         </Container>
       </section>
 
       {/* Focus areas */}
       <section className="py-16 sm:py-24">
         <Container>
-          <SectionHeading
-            eyebrow="Focus areas"
-            title="What you'll learn"
-          />
+          <SectionHeading eyebrow="Focus areas" title="What you'll learn" />
           <div className="mt-12 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
             {FOCUS_AREAS.map((area) => {
               const Icon = FOCUS_ICONS[area.icon] ?? Sparkles;
@@ -177,82 +215,41 @@ export default async function ProgramPage() {
         </Container>
       </section>
 
-      {/* Curriculum (if a course is published) */}
-      {featured && featured.course.curriculum.length > 0 && (
-        <section className="py-16 sm:py-24">
-          <Container>
-            <SectionHeading
-              eyebrow="Curriculum"
-              title="What you'll cover, day by day"
-            />
-            <div className="mt-12 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-              {featured.course.curriculum.map((day) => (
-                <OffsetCard key={day.day}>
-                  <div className="p-6">
-                    <div className="flex items-center gap-3">
-                      <span className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                        {day.day}
-                      </span>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Day {day.day}
-                      </span>
-                    </div>
-                    <h3 className="mt-4 font-semibold text-foreground">
-                      {day.title}
-                    </h3>
-                    {day.points.length > 0 && (
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                        {day.points.join(" · ")}
-                      </p>
-                    )}
-                  </div>
-                </OffsetCard>
-              ))}
-            </div>
-          </Container>
-        </section>
-      )}
+      {/* Curriculum — the 5-day plan (from lib/content) */}
+      <Curriculum />
 
       {/* Registration / payment */}
       <section id="register" className="scroll-mt-20 py-16 sm:py-24">
         <Container>
           <SectionHeading
+            center
             eyebrow="Register"
             title="Reserve your seat"
-            subtitle="Secure payment via Razorpay — UPI, Google Pay, PhonePe, Paytm, cards, netbanking & QR. Prices in INR. On success you'll get an instant receipt and email confirmation."
-            center
+            subtitle="Two plans — Basic, or Premium with 1-on-1 mentorship. Secure payment via Razorpay (UPI, cards & netbanking). On success you'll get an instant receipt and email confirmation."
           />
 
-          {cohorts.length > 0 ? (
-            <div className="mx-auto mt-14 grid max-w-4xl gap-x-6 gap-y-8 sm:grid-cols-2">
-              {cohorts.map((cohort) => (
-                <OffsetCard key={cohort.id} className="h-full">
-                  <div className="flex h-full flex-col p-8">
-                    <h3 className="text-lg font-semibold text-foreground">
-                      {cohort.name}
-                    </h3>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {formatDateRange(cohort.start_date, cohort.end_date)}
-                    </p>
-                    <p className="font-display mt-6 text-4xl font-bold text-foreground">
-                      {formatINR(cohort.price_inr)}
-                    </p>
-                    <p className="text-sm text-muted-foreground">per participant</p>
-                    <div className="mt-8 flex-1" />
-                    {cohort.enroll_open ? (
-                      <EnrollButton
-                        cohortId={cohort.id}
-                        cohortName={cohort.name}
-                        className="w-full"
-                      />
-                    ) : (
-                      <p className="text-center text-sm text-muted-foreground">
-                        Enrollment for this batch is closed.
-                      </p>
-                    )}
-                  </div>
-                </OffsetCard>
-              ))}
+          {nextCohort ? (
+            <div className="mt-14">
+              <PricingPlans
+                basicPriceInr={nextCohort.price_inr}
+                premiumPriceInr={nextCohort.price_premium_inr}
+                dateLabel={dateLabel}
+                cohortId={registrationOpen ? nextCohort.id : undefined}
+                cohortName={registrationOpen ? nextCohort.name : undefined}
+              />
+
+              {otherBatches.length > 0 && (
+                <p className="mt-10 flex flex-wrap items-center justify-center gap-2 text-center text-sm text-muted-foreground">
+                  <CalendarDays className="size-4 text-primary" aria-hidden />
+                  Also upcoming:&nbsp;
+                  {otherBatches
+                    .map(
+                      (c) =>
+                        `${c.name} (${formatDateRange(c.start_date, c.end_date)})`,
+                    )
+                    .join(" · ")}
+                </p>
+              )}
             </div>
           ) : (
             <div className="mx-auto mt-12 max-w-2xl">
@@ -263,8 +260,8 @@ export default async function ProgramPage() {
                     Registrations opening soon
                   </h3>
                   <p className="mx-auto mt-3 max-w-md text-sm text-primary-foreground/80">
-                    The next EDP batch starts ~15 June. Leave your email and
-                    we&apos;ll notify you the moment registration opens.
+                    The next EDP batch starts soon. Leave your email and we&apos;ll
+                    notify you the moment registration opens.
                   </p>
                   <div className="mt-6">
                     <NewsletterForm source="program" tone="onDark" align="center" />
@@ -272,7 +269,7 @@ export default async function ProgramPage() {
                 </div>
               </OffsetCard>
               <div className="mt-6">
-                <EmptyState message="Once a cohort is added in Supabase (with a price and enroll_open = true), the secure Razorpay registration card appears here automatically." />
+                <EmptyState message="Once a cohort is added in Supabase (with a price and enroll_open = true), the secure Razorpay registration cards appear here automatically." />
               </div>
             </div>
           )}

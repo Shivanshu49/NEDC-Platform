@@ -97,6 +97,72 @@ export const ELIGIBILITY = [
   "Rural communities",
 ];
 
+/** Program intro video (YouTube). Only the id is stored; VideoEmbed builds the URL. */
+export const EDP_VIDEO_ID = "FpgvOhurEz4";
+
+/** "What is the EDP?" — short, plain-language intro (from the official EDP brief). */
+export const EDP_INTRO =
+  "The Entrepreneurship Development Program (EDP) empowers young and aspiring business-minded people with insight into every facet of starting a new business — and the sustainable resources to settle into a career of their own. Every session is tailor-made to train you to start your own business or venture.";
+
+/** Objectives of the programme (from the official EDP brief). */
+export const EDP_OBJECTIVES = [
+  "Prepare aspiring and existing entrepreneurs — women and men — to establish their own business activity.",
+  "Guide you on generating funds for your project — whether a manufacturing unit, a service unit, or trading.",
+  "Help you build a complete Business Plan and Project Report for your venture.",
+];
+
+/**
+ * The 5-day EDP schedule (2 live sessions per day) from the official
+ * Schedule_of_EDP_Training_2026. `theme` summarizes the day; `sessions` are the
+ * two topics covered, in order.
+ */
+export const EDP_CURRICULUM = [
+  {
+    day: 1,
+    theme: "Foundations & setting up",
+    sessions: [
+      "Introduction to the EDP — entrepreneur qualities, mindset, and an ease-of-doing-business approach",
+      "Procedure for setting up a small business, including choosing your business entity",
+    ],
+  },
+  {
+    day: 2,
+    theme: "Government support & leadership",
+    sessions: [
+      "Government initiatives for entrepreneurs — PMEGP, MUDRA & Stand-Up India schemes",
+      "Planning, managing & leadership",
+    ],
+  },
+  {
+    day: 3,
+    theme: "Opportunities & markets",
+    sessions: [
+      "Business opportunities in domestic & international markets — and your own business ideas",
+      "Market overview, direct selling, target market, competition & marketing channels",
+    ],
+  },
+  {
+    day: 4,
+    theme: "Finance & a real-world case",
+    sessions: [
+      "Composite loans — term loans for fixed assets and working-capital facilities",
+      "Case study of a real business unit",
+    ],
+  },
+  {
+    day: 5,
+    theme: "Project report & validation",
+    sessions: [
+      "Writing a Project Report — break-even point (BEP) and ratios for economic viability",
+      "Feedback & valedictory session",
+    ],
+  },
+] as const;
+
+/** Footnote shown under the curriculum. */
+export const EDP_SCHEDULE_NOTE =
+  "Each session is a one-hour live online lecture, with a 15-minute break after the first session.";
+
 /** Contact details — PLACEHOLDERS the team fills in. */
 export const CONTACT = {
   phone: "+91 00000 00000",

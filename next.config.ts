@@ -23,14 +23,14 @@ const csp = [
   // 'unsafe-eval' is added in dev only (Turbopack HMR needs it).
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://checkout.razorpay.com`,
   "style-src 'self' 'unsafe-inline'",
-  // Images: our hosts + Mux posters + the placeholder providers in remotePatterns.
-  "img-src 'self' data: blob: https://*.supabase.co https://image.mux.com https://picsum.photos https://i.pravatar.cc https://images.unsplash.com",
+  // Images: our hosts + Mux posters + YouTube thumbnails + the placeholder providers in remotePatterns.
+  "img-src 'self' data: blob: https://*.supabase.co https://image.mux.com https://i.ytimg.com https://picsum.photos https://i.pravatar.cc https://images.unsplash.com",
   // Mux video streams.
   "media-src 'self' blob: https://stream.mux.com",
   // Supabase API/realtime, Razorpay, Mux (+ the local HMR websocket in dev).
   `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.razorpay.com https://lumberjack.razorpay.com https://*.mux.com https://stream.mux.com${isDev ? " ws: http://localhost:*" : ""}`,
-  // Razorpay opens its checkout in an iframe.
-  "frame-src https://checkout.razorpay.com https://api.razorpay.com",
+  // Razorpay opens its checkout in an iframe; YouTube for the program intro video.
+  "frame-src https://checkout.razorpay.com https://api.razorpay.com https://www.youtube-nocookie.com https://www.youtube.com",
   "font-src 'self' data:",
   "base-uri 'self'",
   "form-action 'self'",
@@ -63,6 +63,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "**.supabase.co" },
       // Mux thumbnails/posters for recordings (Phase 5).
       { protocol: "https", hostname: "image.mux.com" },
+      // YouTube video thumbnails (program intro video facade).
+      { protocol: "https", hostname: "i.ytimg.com" },
     ],
   },
 };

@@ -47,8 +47,10 @@ CLAUDE.md
 SETUP.md
 SECURITY.md
 
-# Uploaded source documents (mentor CVs, etc.) — hold private contact info, never commit
+# Uploaded source documents (mentor CVs, EDP schedule, etc.) — content is added to
+# the site/content config; keep the raw source files out of git
 /DOC-*.pdf
+/Schedule_*.pdf
 
 # Raw camera source photos — the optimized versions live in /public, commit those
 /DSC*.JPG

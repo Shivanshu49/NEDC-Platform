@@ -28,6 +28,8 @@ import { OffsetCard } from "@/components/OffsetCard";
 import { Badge } from "@/components/ui/badge";
 // Landing-page sections (blueprint order). Built as self-contained components.
 import { WhyNedc } from "@/components/sections/WhyNedc";
+import { AboutProgram } from "@/components/sections/AboutProgram";
+import { Curriculum } from "@/components/sections/Curriculum";
 import { FounderJourney } from "@/components/sections/FounderJourney";
 import { WhoItsFor } from "@/components/sections/WhoItsFor";
 import { SchemeHub } from "@/components/sections/SchemeHub";
@@ -332,12 +334,14 @@ export default async function HomePage() {
       {/* ================= WHY NEDC — the mindset shift (S4) ================= */}
       <WhyNedc />
 
+      {/* ================= WHAT IS THE EDP? — intro + objectives + video ================= */}
+      <AboutProgram />
+
       {/* ================= THE PROGRAM (EDP) — focus areas (S5) ================= */}
       {/* The centerpiece grid. On deep navy with film grain, light glass cards
           and a maroon-glow hover read as a premium "feature wall". */}
       <section
-        id="program"
-        className="relative scroll-mt-24 overflow-hidden bg-primary py-20 text-primary-foreground sm:py-28"
+        className="relative overflow-hidden bg-primary py-20 text-primary-foreground sm:py-28"
       >
         <div
           aria-hidden
@@ -360,7 +364,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-2xl text-center">
             <p className="mb-3 inline-flex items-center justify-center gap-2.5 text-xs font-bold uppercase tracking-[0.16em] text-brand-light">
               <span aria-hidden className="h-px w-6 bg-brand-light/60" />
-              The Program (EDP)
+              Focus areas
             </p>
             <h2 className="font-display text-balance text-fluid-h2 font-bold tracking-tight">
               What you&apos;ll learn in the program
@@ -410,6 +414,9 @@ export default async function HomePage() {
           </p>
         </Container>
       </section>
+
+      {/* ================= CURRICULUM — the 5-day plan ================= */}
+      <Curriculum />
 
       {/* ================= THE FOUNDER JOURNEY (S6) ================= */}
       <FounderJourney />
