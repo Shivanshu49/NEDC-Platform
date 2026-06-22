@@ -45,12 +45,14 @@ export default async function DashboardPage({
         organization: (p.organization as string | null) ?? null,
         city: (p.city as string | null) ?? null,
         bio: (p.bio as string | null) ?? null,
+        avatar_url: (p.avatar_url as string | null) ?? null,
         created_at: (p.created_at as string | null) ?? null,
       }
     : null;
 
   return (
     <DashboardHome
+      userId={user.id}
       email={user.email ?? ""}
       profile={profile}
       enrollments={(enrollData as DashEnrollment[] | null) ?? []}

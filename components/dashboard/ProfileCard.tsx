@@ -13,6 +13,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { updateProfile, type ProfileState } from "@/app/dashboard/actions";
+import { AvatarUploader } from "@/components/AvatarUploader";
+import { PROFESSIONS, initials, profileCompleteness } from "@/lib/profile";
 
 export type ProfileFields = {
   full_name: string | null;
@@ -21,26 +23,8 @@ export type ProfileFields = {
   organization: string | null;
   city: string | null;
   bio: string | null;
+  avatar_url: string | null;
 };
-
-const PROFESSIONS = [
-  "Student",
-  "Aspiring entrepreneur",
-  "Working professional",
-  "Business owner",
-  "Freelancer / Self-employed",
-  "Homemaker",
-  "Other",
-];
-
-/** Two initials from a name (or the email local-part as a fallback). */
-function initials(name: string, email: string): string {
-  const src = name.trim() || email.replace(/@.*/, "");
-  const parts = src.trim().split(/[\s._-]+/).filter(Boolean);
-  const a = parts[0]?.[0] ?? "";
-  const b = parts.length > 1 ? parts[parts.length - 1][0] : parts[0]?.[1] ?? "";
-  return (a + b).toUpperCase() || "?";
-}
 
 const inputClass =
   "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
@@ -107,9 +91,11 @@ function Detail({
 }
 
 export function ProfileCard({
+  userId,
   email,
   profile,
 }: {
+  userId: string;
   email: string;
   profile: ProfileFields | null;
 }) {
@@ -130,18 +116,10 @@ export function ProfileCard({
   }
 
   const name = profile?.full_name?.trim() ?? "";
+  const avatarUrl = profile?.avatar_url ?? null;
 
-  // Profile completeness nudge.
-  const checks = [
-    name,
-    profile?.phone,
-    profile?.profession,
-    profile?.city,
-    profile?.organization,
-    profile?.bio,
-  ];
-  const filled = checks.filter((c) => c && String(c).trim()).length;
-  const pct = Math.round((filled / checks.length) * 100);
+  // Profile completeness nudge (shared with the onboarding flow).
+  const pct = profileCompleteness(profile);
 
   return (
     <section className="overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
@@ -152,8 +130,13 @@ export function ProfileCard({
         {/* Identity row */}
         <div className="-mt-12 flex flex-wrap items-end justify-between gap-4">
           <div className="flex items-end gap-4">
-            <span className="font-display flex size-24 flex-none items-center justify-center rounded-2xl bg-primary text-2xl font-extrabold text-primary-foreground shadow-lift ring-4 ring-card">
-              {initials(name, email)}
+            <span className="font-display flex size-24 flex-none items-center justify-center overflow-hidden rounded-2xl bg-primary text-2xl font-extrabold text-primary-foreground shadow-lift ring-4 ring-card">
+              {avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element -- small avatar; next/image optimization is unnecessary
+                <img src={avatarUrl} alt="" className="size-full object-cover" />
+              ) : (
+                initials(name, email)
+              )}
             </span>
             <div className="pb-1">
               <h2 className="font-display text-xl font-bold tracking-tight text-foreground">
@@ -179,6 +162,14 @@ export function ProfileCard({
         {editing ? (
           <form action={formAction} className="mt-6 space-y-4">
             <h3 className="sr-only">Edit profile</h3>
+            <div className="rounded-2xl border border-border bg-secondary/40 p-4">
+              <AvatarUploader
+                userId={userId}
+                email={email}
+                name={name}
+                initialUrl={avatarUrl}
+              />
+            </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field name="full_name" label="Full name" defaultValue={name} placeholder="e.g. Aarav Sharma" autoComplete="name" maxLength={120} autoFocus />
               <Field name="phone" label="Phone" defaultValue={profile?.phone ?? ""} placeholder="e.g. +91 98765 43210" inputMode="tel" autoComplete="tel" maxLength={40} />

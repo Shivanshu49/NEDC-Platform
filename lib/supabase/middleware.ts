@@ -40,11 +40,13 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protect the student area.
-  if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
+  // Protect the student area + the post-login onboarding step.
+  const path = request.nextUrl.pathname;
+  const isProtected = path.startsWith("/dashboard") || path.startsWith("/welcome");
+  if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
-    url.searchParams.set("next", request.nextUrl.pathname);
+    url.searchParams.set("next", path);
     return NextResponse.redirect(url);
   }
 

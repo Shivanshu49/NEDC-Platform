@@ -30,3 +30,42 @@ export const verifyPaymentBody = z.object({
   razorpay_payment_id: z.string().min(1),
   razorpay_signature: z.string().min(1),
 });
+
+/**
+ * A profile photo URL. We only ever persist a URL that points at OUR OWN public
+ * `avatars` Storage bucket — never an arbitrary client-supplied string (which
+ * could be an off-site tracking pixel or a `javascript:`/`data:` payload). The
+ * photo is uploaded client-side straight to Storage, so the hidden form field is
+ * untrusted and must be checked here. Empty string = "no photo".
+ */
+export const avatarUrl = z
+  .string()
+  .trim()
+  .max(2048)
+  .refine((v) => {
+    if (v === "") return true;
+    // Normalize a stray trailing slash: supabase-js always emits single-slash
+    // public URLs, so a trailing slash in the env would otherwise fail-close and
+    // silently reject every legitimate avatar.
+    const base = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").replace(/\/+$/, "");
+    return (
+      base !== "" &&
+      v.startsWith(`${base}/storage/v1/object/public/avatars/`)
+    );
+  }, "That image link isn't valid.");
+
+/**
+ * The editable fields a signed-in student may change about themselves — shared
+ * by the dashboard profile editor and the post-login onboarding wizard so both
+ * validate identically. RLS + per-column GRANTs (migrations 0001/0006/0007) are
+ * the real authority; this is the friendly, early shape check.
+ */
+export const profileFields = z.object({
+  full_name: z.string().trim().max(120, "Name is too long (max 120 characters)."),
+  phone: z.string().trim().max(40, "Phone is too long (max 40 characters)."),
+  profession: z.string().trim().max(80, "Profession is too long (max 80 characters)."),
+  organization: z.string().trim().max(120, "Organization is too long (max 120 characters)."),
+  city: z.string().trim().max(80, "City is too long (max 80 characters)."),
+  bio: z.string().trim().max(500, "About is too long (max 500 characters)."),
+  avatar_url: avatarUrl,
+});

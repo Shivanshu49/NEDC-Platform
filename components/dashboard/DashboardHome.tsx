@@ -86,11 +86,13 @@ function ProgramCard({ e }: { e: DashEnrollment }) {
 }
 
 export function DashboardHome({
+  userId,
   email,
   profile,
   enrollments,
   justEnrolled = false,
 }: {
+  userId: string;
   email: string;
   profile: DashProfile;
   enrollments: DashEnrollment[];
@@ -131,7 +133,7 @@ export function DashboardHome({
       )}
 
       {/* Profile */}
-      <ProfileCard email={email} profile={profile} />
+      <ProfileCard userId={userId} email={email} profile={profile} />
 
       {/* Account stats */}
       <div className="grid gap-4 sm:grid-cols-3">

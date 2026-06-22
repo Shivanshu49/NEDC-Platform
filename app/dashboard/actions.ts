@@ -1,29 +1,21 @@
 "use server";
 
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/ratelimit";
 import { logEvent } from "@/lib/log";
+import { profileFields } from "@/lib/validation";
 
 /**
  * Update the signed-in user's own profile.
  *
  * Runs through the user-scoped Supabase client, so Row Level Security
  * (profiles_update_own) limits it to their own row, and the column-level GRANT
- * (see 0001 + 0006) limits WHICH columns can change — a user can never set
- * is_admin or touch anyone else's row from here. Email is intentionally NOT
- * editable: it is managed by the auth provider / login.
+ * (see 0001 + 0006 + 0007) limits WHICH columns can change — a user can never
+ * set is_admin or touch anyone else's row from here. Email is intentionally NOT
+ * editable: it is managed by the auth provider / login. `avatar_url` is validated
+ * to be one of our own Storage URLs (see lib/validation).
  */
-const profileSchema = z.object({
-  full_name: z.string().trim().max(120, "Name is too long (max 120 characters)."),
-  phone: z.string().trim().max(40, "Phone is too long (max 40 characters)."),
-  profession: z.string().trim().max(80, "Profession is too long (max 80 characters)."),
-  organization: z.string().trim().max(120, "Organization is too long (max 120 characters)."),
-  city: z.string().trim().max(80, "City is too long (max 80 characters)."),
-  bio: z.string().trim().max(500, "About is too long (max 500 characters)."),
-});
-
 export type ProfileState = { ok: boolean; error?: string; savedAt?: number };
 
 const str = (v: FormDataEntryValue | null) => String(v ?? "");
@@ -50,13 +42,14 @@ export async function updateProfile(
 
   // FormData.get() returns null for an absent field; normalize to "" so the
   // schema (and a partial/direct POST) is handled gracefully.
-  const parsed = profileSchema.safeParse({
+  const parsed = profileFields.safeParse({
     full_name: str(formData.get("full_name")),
     phone: str(formData.get("phone")),
     profession: str(formData.get("profession")),
     organization: str(formData.get("organization")),
     city: str(formData.get("city")),
     bio: str(formData.get("bio")),
+    avatar_url: str(formData.get("avatar_url")),
   });
   if (!parsed.success) {
     return {
@@ -75,6 +68,7 @@ export async function updateProfile(
       organization: clean(d.organization),
       city: clean(d.city),
       bio: clean(d.bio),
+      avatar_url: clean(d.avatar_url),
     })
     .eq("id", user.id);
 

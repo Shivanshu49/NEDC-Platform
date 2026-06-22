@@ -38,6 +38,8 @@ const LIMITERS = {
   contact: makeLimiter(5, "10 m"),
   // Profile self-edits — generous; just blunts scripted write spam.
   profile: makeLimiter(20, "1 m"),
+  // Post-login onboarding submit/skip — generous; one-time flow.
+  onboarding: makeLimiter(20, "1 m"),
 } as const;
 
 /**
