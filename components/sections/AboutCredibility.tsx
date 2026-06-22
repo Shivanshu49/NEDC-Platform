@@ -11,9 +11,9 @@ import { MISSION } from "@/lib/content";
  *
  * Credibility is the whole point of this section, so the copy is intentionally
  * honest and non-overclaiming:
- *  - the org's legal status is rendered as an OBVIOUS placeholder span
- *    (`[legal status — to be confirmed]`) until the real registered status is
- *    known — we never assert a specific one.
+ *  - it describes NEDC as an independent learning platform and deliberately does
+ *    NOT assert a specific legal/registered status (non-profit, society, company,
+ *    etc.) until one is confirmed — we never claim an unverified status.
  *  - a "What we are / What we're not" pair makes the boundaries explicit: NEDC
  *    is an independent LEARNING platform, NOT a government body, and is
  *    independent of official bodies such as NEDB and NIESBUD.
@@ -30,16 +30,14 @@ export function AboutCredibility() {
           center
         />
 
-        {/* Lead body — verbatim, with the legal status held as a visible placeholder. */}
+        {/* Lead body — describes NEDC as an independent learning platform; no
+            specific legal/registered status is asserted until one is confirmed. */}
         <p className="mx-auto mt-6 max-w-3xl text-pretty text-center text-base leading-relaxed text-muted-foreground sm:text-lg">
-          The National Entrepreneurship Development Center (NEDC) is a{" "}
-          <span className="mx-0.5 inline-block rounded bg-brand/10 px-1.5 py-0.5 align-baseline text-sm font-medium text-brand">
-            [legal status — to be confirmed]
-          </span>{" "}
-          organization helping individuals across India learn entrepreneurship,
-          build businesses, and access opportunities. We help our learners
-          understand and navigate national initiatives such as Startup India,
-          MSME, and Skill India.
+          The National Entrepreneurship Development Center (NEDC) is an
+          independent entrepreneurship learning platform helping individuals
+          across India learn entrepreneurship, build businesses, and access
+          opportunities. We help our learners understand and navigate national
+          initiatives such as Startup India, MSME, and Skill India.
         </p>
 
         {/* Clarity block — explicit boundaries to keep affiliation language honest. */}
