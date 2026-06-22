@@ -13,9 +13,11 @@ import { z } from "zod";
 /** A Postgres uuid (cohort ids, recording ids, etc.). */
 export const uuid = z.uuid();
 
-/** POST /api/checkout body. */
+/** POST /api/checkout body. `plan` selects the pricing tier (server derives the
+ *  actual price from the DB — the client never sends an amount). */
 export const checkoutBody = z.object({
   cohortId: z.uuid(),
+  plan: z.enum(["basic", "premium"]).default("basic"),
 });
 
 /**

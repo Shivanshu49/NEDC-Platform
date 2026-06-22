@@ -41,7 +41,7 @@ import {
   getSpeakers,
   pickNextCohort,
 } from "@/lib/queries";
-import { formatDateRange, formatINR } from "@/lib/format";
+import { formatDateRange } from "@/lib/format";
 import { FOCUS_AREAS } from "@/lib/content";
 
 // Re-fetch DB-backed content at most every 5 minutes (ISR). Static otherwise.
@@ -506,7 +506,8 @@ export default async function HomePage() {
 
       {/* ================= PRICING / REGISTRATION (S12) ================= */}
       <PricingRegistration
-        priceLabel={nextCohort ? formatINR(nextCohort.price_inr) : undefined}
+        basicPriceInr={nextCohort?.price_inr}
+        premiumPriceInr={nextCohort?.price_premium_inr ?? null}
         dateLabel={nextCohort ? cohortDate : undefined}
         cohortId={registrationOpen ? nextCohort!.id : undefined}
         cohortName={registrationOpen ? nextCohort!.name : undefined}

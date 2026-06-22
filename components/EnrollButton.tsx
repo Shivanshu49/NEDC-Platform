@@ -3,22 +3,32 @@
 import Script from "next/script";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import type { PlanId } from "@/lib/plans";
 
 /**
  * Enroll → Razorpay checkout.
  *
- * Flow: POST /api/checkout (server creates the order) → open Razorpay Checkout →
- * the payment webhook grants the enrollment → we send the user to the dashboard.
+ * Flow: POST /api/checkout (server creates the order for the chosen `plan`) →
+ * open Razorpay Checkout → the payment webhook grants the enrollment → we send
+ * the user to the dashboard.
  * - 401 from checkout means "not logged in" → send to /login.
  * - 409 means "already enrolled" → send to /dashboard.
+ *
+ * The client only sends a plan id; the server derives the price from the DB.
  */
 export function EnrollButton({
   cohortId,
   cohortName,
+  plan = "basic",
+  label = "Enroll now",
+  variant = "primary",
   className = "",
 }: {
   cohortId: string;
   cohortName: string;
+  plan?: PlanId;
+  label?: string;
+  variant?: "primary" | "secondary" | "brand";
   className?: string;
 }) {
   const router = useRouter();
@@ -33,7 +43,7 @@ export function EnrollButton({
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cohortId }),
+        body: JSON.stringify({ cohortId, plan }),
       });
 
       if (res.status === 401) {
@@ -110,6 +120,13 @@ export function EnrollButton({
     }
   }
 
+  const variantClass =
+    variant === "secondary"
+      ? "border border-input bg-card text-foreground hover:bg-secondary"
+      : variant === "brand"
+        ? "bg-brand text-brand-foreground hover:bg-brand-dark"
+        : "bg-primary text-primary-foreground hover:bg-primary/90";
+
   return (
     <>
       {/* Razorpay Checkout widget (adds window.Razorpay) */}
@@ -118,11 +135,11 @@ export function EnrollButton({
         type="button"
         onClick={handleEnroll}
         disabled={loading}
-        className={`inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${className}`}
+        className={`inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${variantClass} ${className}`}
       >
-        {loading ? "Processing…" : "Enroll now"}
+        {loading ? "Processing…" : label}
       </button>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
     </>
   );
 }

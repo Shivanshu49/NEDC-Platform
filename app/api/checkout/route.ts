@@ -37,11 +37,13 @@ export async function POST(request: Request) {
     );
   }
 
-  // 3. Validate the body (cohortId must be a uuid).
+  // 3. Validate the body (cohortId must be a uuid; plan ∈ {basic, premium}).
   let cohortId: string;
+  let plan: "basic" | "premium";
   try {
     const parsed = checkoutBody.parse(await request.json());
     cohortId = parsed.cohortId;
+    plan = parsed.plan;
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
@@ -51,12 +53,24 @@ export async function POST(request: Request) {
   // 4. Authoritative price + availability from the DB (NEVER trust the client).
   const { data: cohort } = await admin
     .from("cohorts")
-    .select("id, name, price_inr, enroll_open")
+    .select("id, name, price_inr, price_premium_inr, enroll_open")
     .eq("id", cohortId)
     .maybeSingle();
   if (!cohort || !cohort.enroll_open) {
     return NextResponse.json(
       { error: "This cohort isn't open for enrollment." },
+      { status: 400 },
+    );
+  }
+
+  // 4b. Resolve the price for the chosen tier — server-side, from the DB. The
+  //     browser only ever names a plan; it can never set the amount. Premium is
+  //     available only when the cohort has a premium price configured.
+  const amountInr =
+    plan === "premium" ? cohort.price_premium_inr : cohort.price_inr;
+  if (typeof amountInr !== "number" || amountInr <= 0) {
+    return NextResponse.json(
+      { error: "This plan isn't available for this cohort." },
       { status: 400 },
     );
   }
@@ -74,16 +88,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ alreadyEnrolled: true }, { status: 409 });
   }
 
-  // 6. Reuse an existing OPEN order for this (user, cohort) at the current price.
-  //    Without this, every Enroll click (e.g. opening then dismissing the modal)
-  //    would pile up separate, independently-capturable orders.
+  // 6. Reuse an existing OPEN order for this (user, cohort, plan) at the current
+  //    price. Without this, every Enroll click (e.g. opening then dismissing the
+  //    modal) would pile up separate, independently-capturable orders. Matching
+  //    on plan + amount means switching tiers correctly creates a fresh order.
   const { data: openPayment } = await admin
     .from("payments")
     .select("razorpay_order_id")
     .eq("user_id", user.id)
     .eq("cohort_id", cohort.id)
     .eq("status", "created")
-    .eq("amount_inr", cohort.price_inr)
+    .eq("plan", plan)
+    .eq("amount_inr", amountInr)
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -96,9 +112,9 @@ export async function POST(request: Request) {
     let order;
     try {
       order = await razorpay.orders.create({
-        amount: cohort.price_inr, // paise
+        amount: amountInr, // paise — server-derived from the DB for the chosen plan
         currency: "INR",
-        notes: { user_id: user.id, cohort_id: cohort.id }, // server-set, authoritative
+        notes: { user_id: user.id, cohort_id: cohort.id, plan }, // server-set, authoritative
       });
     } catch {
       logEvent("error", "checkout.order_create_failed", {
@@ -117,9 +133,10 @@ export async function POST(request: Request) {
       user_id: user.id,
       cohort_id: cohort.id,
       razorpay_order_id: order.id,
-      amount_inr: cohort.price_inr,
+      amount_inr: amountInr,
       currency: "INR",
       status: "created",
+      plan,
     });
     if (insertError) {
       logEvent("error", "checkout.payment_insert_failed", {
@@ -141,7 +158,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     orderId,
-    amount: cohort.price_inr,
+    amount: amountInr,
     currency: "INR",
     keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
     cohortName: cohort.name,

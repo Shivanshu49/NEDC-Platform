@@ -111,6 +111,7 @@ export async function POST(request: Request) {
       cohort_id: pay.cohort_id,
       status: "active",
       payment_id: pay.id,
+      plan: pay.plan ?? "basic", // record the tier they bought (Basic / Premium)
     },
     { onConflict: "user_id,cohort_id" },
   );

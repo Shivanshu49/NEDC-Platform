@@ -37,10 +37,11 @@ values (
 on conflict (id) do nothing;
 
 -- ---------- Cohorts (dated runs — what students buy). Prices are in PAISE. ----------
-insert into public.cohorts (id, course_id, name, start_date, end_date, timezone, price_inr, capacity, status, enroll_open)
+-- price_inr = Basic tier (₹1,499); price_premium_inr = Premium tier (₹1,899).
+insert into public.cohorts (id, course_id, name, start_date, end_date, timezone, price_inr, price_premium_inr, capacity, status, enroll_open)
 values
-  ('0c0a5e00-0000-4000-8000-000000000011','0c0a5e00-0000-4000-8000-000000000001','July 2026 Batch','2026-07-14','2026-07-19','Asia/Kolkata',499900,40,'open',true),
-  ('0c0a5e00-0000-4000-8000-000000000012','0c0a5e00-0000-4000-8000-000000000001','September 2026 Batch','2026-09-08','2026-09-13','Asia/Kolkata',599900,40,'upcoming',true)
+  ('0c0a5e00-0000-4000-8000-000000000011','0c0a5e00-0000-4000-8000-000000000001','July 2026 Batch','2026-07-14','2026-07-19','Asia/Kolkata',149900,189900,40,'open',true),
+  ('0c0a5e00-0000-4000-8000-000000000012','0c0a5e00-0000-4000-8000-000000000001','September 2026 Batch','2026-09-08','2026-09-13','Asia/Kolkata',149900,189900,40,'upcoming',true)
 on conflict (id) do nothing;
 
 -- ---------- Speakers / mentors ----------

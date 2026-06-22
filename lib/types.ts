@@ -40,7 +40,8 @@ export type Cohort = {
   start_date: string; // ISO date, e.g. "2026-07-14"
   end_date: string;
   timezone: string;
-  price_inr: number; // PAISE — divide by 100 for rupees (see lib/format.ts)
+  price_inr: number; // PAISE — divide by 100 for rupees (see lib/format.ts). Basic tier.
+  price_premium_inr: number | null; // PAISE — optional Premium tier; null = Basic only.
   capacity: number | null;
   status: CohortStatus;
   enroll_open: boolean;
