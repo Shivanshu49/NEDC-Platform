@@ -34,6 +34,7 @@ import { SchemeHub } from "@/components/sections/SchemeHub";
 import { Certification } from "@/components/sections/Certification";
 import { PricingRegistration } from "@/components/sections/PricingRegistration";
 import { AboutCredibility } from "@/components/sections/AboutCredibility";
+import { Organiser } from "@/components/sections/Organiser";
 import { FaqSection } from "@/components/sections/FaqSection";
 import {
   getFeaturedProgram,
@@ -513,6 +514,9 @@ export default async function HomePage() {
 
       {/* ================= ABOUT & CREDIBILITY (S14) ================= */}
       <AboutCredibility />
+
+      {/* ================= THE ORGANISER (founder spotlight) ================= */}
+      <Organiser />
 
       {/* ================= FAQ (S15) ================= */}
       <FaqSection />

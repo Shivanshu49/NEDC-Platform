@@ -12,6 +12,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { OffsetCard } from "@/components/OffsetCard";
 import { TeamCard } from "@/components/TeamCard";
 import { EmptyState } from "@/components/EmptyState";
+import { Organiser } from "@/components/sections/Organiser";
 import { getTeamMembers } from "@/lib/queries";
 import { MISSION, VISION_FULL, WELCOME_MESSAGE } from "@/lib/content";
 
@@ -218,6 +219,9 @@ export default async function AboutPage() {
           </div>
         </Container>
       </section>
+
+      {/* Founder & Organiser spotlight */}
+      <Organiser />
 
       {/* Leadership / advisory team */}
       <section className="border-t border-border bg-panel/50 py-16 sm:py-24">
