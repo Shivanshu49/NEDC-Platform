@@ -18,8 +18,22 @@ export default async function DashboardLayout({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/dashboard");
 
-  // Initials for the avatar chip (from email local-part).
-  const initials = (user.email ?? "?").slice(0, 2).toUpperCase();
+  // Prefer the user's name for the header chip; fall back to the email.
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name")
+    .eq("id", user.id)
+    .maybeSingle();
+  const displayName: string = profile?.full_name?.trim() || user.email || "";
+  const initials =
+    displayName
+      .replace(/@.*/, "")
+      .split(/[\s._-]+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((p) => p[0])
+      .join("")
+      .toUpperCase() || "?";
 
   return (
     <div className="min-h-screen bg-secondary/40">
@@ -36,8 +50,8 @@ export default async function DashboardLayout({
               <span className="flex size-7 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
                 {initials}
               </span>
-              <span className="text-sm text-muted-foreground">
-                {user.email}
+              <span className="max-w-[14rem] truncate text-sm text-muted-foreground">
+                {displayName}
               </span>
             </div>
             {/* Sign out is a POST so a stray link/prefetch can't trigger it. */}

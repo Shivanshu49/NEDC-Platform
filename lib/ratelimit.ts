@@ -36,6 +36,8 @@ const LIMITERS = {
   recordingToken: makeLimiter(60, "1 m"),
   // Public contact form — blunt spam/flooding.
   contact: makeLimiter(5, "10 m"),
+  // Profile self-edits — generous; just blunts scripted write spam.
+  profile: makeLimiter(20, "1 m"),
 } as const;
 
 /**
