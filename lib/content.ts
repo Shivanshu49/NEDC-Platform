@@ -165,8 +165,8 @@ export const EDP_SCHEDULE_NOTE =
 
 /** Contact details — PLACEHOLDERS the team fills in. */
 export const CONTACT = {
-  phone: "+91 00000 00000",
-  whatsapp: "910000000000", // digits only, for wa.me links
+  phone: "+91 91152 59995",
+  whatsapp: "919115259995", // digits only, for wa.me links
   email: "info@nedc.example",
   address: "NEDC Office, [City], India",
   socials: {
