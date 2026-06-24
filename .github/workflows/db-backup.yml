@@ -1,0 +1,96 @@
+name: Database backup
+
+# Logical backup of the Supabase Postgres database. Supabase's FREE tier has no
+# automated backups, so this is the safety net: a daily dump of roles + schema +
+# data, stored as a compressed, retained workflow artifact.
+#
+# SETUP (one time):
+#   1. Supabase Dashboard -> Project Settings -> Database -> Connection string.
+#      Copy the *Session pooler* URI (host ...pooler.supabase.com, port 5432) and
+#      fill in your database password. Use the SESSION pooler, NOT the transaction
+#      pooler (port 6543) -- pg_dump needs a session connection. The session
+#      pooler is also IPv4-friendly, which GitHub-hosted runners require.
+#   2. Repo -> Settings -> Secrets and variables -> Actions -> New repository secret
+#      Name: SUPABASE_DB_URL   Value: the URI from step 1.
+#   3. Run it once manually (Actions tab -> Database backup -> Run workflow) to
+#      confirm, then download the artifact to verify it restores.
+#
+# WHAT THIS CAPTURES: roles, the public-schema definitions + data, and the AUTH
+# schema data (auth.users / identities) -- the accounts that enrollments,
+# payments and profiles all foreign-key to. It does NOT capture Supabase-managed
+# *schema* definitions or migration history (recreate those by applying
+# supabase/migrations/*.sql, which live in this repo) and does NOT capture
+# Storage *files* (e.g. avatars) -- those live in object storage; only their
+# metadata rows are in the DB. Avatars are optional profile photos, treated as
+# non-critical here.
+#
+# RESTORE ORDER (into a fresh Supabase project): apply supabase/migrations/*.sql
+# -> load roles.sql -> load auth_data.sql -> load data.sql. Test a restore at
+# least once (setup step 3) -- an untested backup is a hope, not a backup.
+#
+# CAVEATS: GitHub disables scheduled workflows after 60 days with no repo
+# activity (any push / manual run re-enables it); note the Supabase keep-alive
+# itself runs on Vercel Cron, not here, so a disabled schedule only stops
+# BACKUPS. Artifacts are GitHub-only with 30-day retention -- for real
+# disaster recovery add an upload step to offsite storage (Cloudflare R2 / S3).
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # daily at 02:00 UTC
+  workflow_dispatch: {} # allow manual runs
+
+concurrency:
+  group: db-backup
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Guard — require the DB URL secret
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "::error::SUPABASE_DB_URL secret is not set. See the setup notes at the top of this workflow."
+            exit 1
+          fi
+
+      - name: Install Supabase CLI
+        # Pinned (not `latest`) so the bundled pg_dump behaviour can't change under
+        # us between runs. Bump deliberately, and re-verify after a Postgres upgrade.
+        uses: supabase/setup-cli@v2
+        with:
+          version: 2.107.0
+
+      - name: Dump roles, schema and data
+        id: dump
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          set -euo pipefail
+          ts="$(date -u +%Y%m%d-%H%M%S)"
+          mkdir -p backup
+          # Roles + public-schema definitions.
+          supabase db dump --db-url "$SUPABASE_DB_URL" --role-only -f backup/roles.sql
+          supabase db dump --db-url "$SUPABASE_DB_URL"             -f backup/schema.sql
+          # Public data (COPY format = smaller/faster/more robust to restore).
+          supabase db dump --db-url "$SUPABASE_DB_URL" --data-only --use-copy -f backup/data.sql
+          # Auth data (auth.users / identities) — the accounts that payments,
+          # enrollments and profiles FK to. Excluded from the default dump, so
+          # without this a restore would lose every user and break those FKs.
+          supabase db dump --db-url "$SUPABASE_DB_URL" --data-only --use-copy --schema auth -f backup/auth_data.sql
+          tar -czf "nedc-db-backup-${ts}.tar.gz" -C backup .
+          ls -lh "nedc-db-backup-${ts}.tar.gz"
+          echo "artifact=nedc-db-backup-${ts}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.dump.outputs.artifact }}
+          path: nedc-db-backup-*.tar.gz
+          retention-days: 30
+          if-no-files-found: error
