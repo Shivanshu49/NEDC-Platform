@@ -95,10 +95,18 @@ export function Certification() {
 
               {/* Certificate contents. */}
               <div className="relative flex h-full flex-col items-center justify-center px-6 py-7 text-center sm:px-10 sm:py-9">
-                {/* NEDC mark. */}
-                <Logo variant="default" className="h-9 w-auto" linked={false} />
+                {/* NEDC mark — full stacked lockup (emblem + "NEDC" wordmark) as
+                    the certificate letterhead, with the organisation name beneath. */}
+                <Logo
+                  variant="default"
+                  withWordmark
+                  orientation="vertical"
+                  linked={false}
+                  className="h-11 w-auto sm:h-12"
+                  wordmarkClassName="text-xl sm:text-2xl"
+                />
 
-                <p className="mt-4 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-xs">
+                <p className="mt-2.5 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-xs">
                   National Entrepreneurship Development Center
                 </p>
 
