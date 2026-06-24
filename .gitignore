@@ -51,7 +51,9 @@ SECURITY.md
 # the site/content config; keep the raw source files out of git
 /DOC-*.pdf
 /Schedule_*.pdf
+/*.pdf
 
 # Raw camera source photos — the optimized versions live in /public, commit those
 /DSC*.JPG
 /DSC*.jpg
+/image.png

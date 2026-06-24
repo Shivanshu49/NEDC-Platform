@@ -6,8 +6,8 @@
 -- just refreshes the row. The mentor appears automatically in the home page
 -- "Mentors" section (#mentors) and on the /speakers page.
 --
--- Photo: served from the repo at public/speakers/satish-kumar-shervan.jpg, so
--- it works once this branch is deployed (no Supabase Storage upload needed).
+-- Photos: served from the repo under public/speakers/ (one file per mentor), so
+-- they work once this branch is deployed (no Supabase Storage upload needed).
 --
 -- NOTE: your live `speakers` table may still hold the 6 placeholder rows from
 -- seed.sql (Aarav Mehta, Priya Nair, …). The landing copy promises "real people
@@ -24,6 +24,15 @@ values
     'A career banker with over three decades at Punjab National Bank, retiring as Chief Manager, across credit portfolio, foreign exchange, and HR. He brings deep expertise in export-import finance, credit-risk rating, and NPA resolution, and has served over 10 years on the faculty of NSIC and NIESBUD. A certified Master Trainer in Entrepreneurship Development for MSMEs under Skill India and NIESBUD (2025), he now mentors new entrepreneurs and exporters on building and funding globally competitive ventures.',
     '/speakers/satish-kumar-shervan.jpg',
     1,
+    true
+  ),
+  (
+    '5a715000-0000-4000-8000-000000000002',
+    'Ravi Gupta',
+    'MSME Growth Strategist and Entrepreneurship Mentor',
+    'An MSME growth strategist and entrepreneurship mentor with more than 20 years of experience helping MSMEs, start-ups, government bodies, and institutions design and run scalable business growth programs. He specializes in turning government schemes such as PMEGP, CM Yuva, NABARD, and SIDBI into real businesses and livelihoods. He has trained over 1,75,000 people across India and abroad, delivered programs in more than 500 institutions, and conducted 200+ Entrepreneurship Development Programs and 175+ Training of Trainers programs. He serves as a Subject Matter Expert with the Quality Council of India, Senior Faculty at NSIC, and Mentor and Trainer at NIESBUD, and has mentored MSMEs under the Walmart Vriddhi program.',
+    '/speakers/ravi-gupta.jpg',
+    2,
     true
   )
 on conflict (id) do update set
@@ -90,4 +99,49 @@ on conflict (id) do update set
 --      forums.
 --   3. Handling credit proposals for new MSME projects — large-ticket, domestic
 --      and international.
+-- =============================================================================
+
+
+-- =============================================================================
+-- FULL PROFILE — reference (source: his one-pager mentor profile PDF, 2026-06-24)
+-- Kept here so the complete profile is preserved; the public card shows the short
+-- bio above. Contact details are intentionally NOT published on the site.
+-- -----------------------------------------------------------------------------
+-- Name:  Ravi Gupta
+-- Role:  MSME Growth Strategist | Govt Schemes Expert | Entrepreneurship Mentor
+-- (Phone & personal email are in the source PDF — kept OUT of this repo for privacy.)
+--
+-- PROFILE SNAPSHOT
+--   20+ years helping MSMEs, start-ups, government bodies and institutions design
+--   and implement scalable business growth and entrepreneurship programs.
+--   Specialises in bridging policy with execution — turning government schemes,
+--   training programs and ideas into real business outcomes and livelihoods.
+--
+-- 1. CORE SERVICES
+--   a. MSME & start-up consulting — business setup & scaling strategy; govt scheme
+--      advisory (PMEGP, CM Yuva, NABARD, SIDBI); market linkage & revenue growth;
+--      AI in business.
+--   b. Training & workshops — Entrepreneurship Development Programs (EDP); skill
+--      development & employability; Training of Trainers (ToT); IIBF training;
+--      Management & Faculty Development Programs.
+--   c. Government & CSR projects — program design & execution; capacity building;
+--      livelihood & rural development.
+--   d. Institutional engagement — start-up incubation support; college/university
+--      entrepreneurship programs; industry-academia collaboration.
+--
+-- 2. IMPACT & ACHIEVEMENTS
+--   a. Trained 1,75,000+ individuals across India & internationally.
+--   b. Delivered programs in 500+ institutions.
+--   c. Supported thousands of MSMEs & start-ups.
+--   d. Worked with international participants (SAARC & Africa).
+--   e. Conducted 200+ EDPs & 175+ ToT programs.
+--   f. Enabled 500+ job placements.
+--
+-- 3. KEY ASSOCIATIONS & EXPERIENCE
+--   a. Subject Matter Expert — Quality Council of India (QCI).
+--   b. Senior Faculty — NSIC.
+--   c. Mentor & Trainer — NIESBUD.
+--   d. MSME Mentor — Walmart Vriddhi Program.
+--   e. Trainer — Delhi Police Project YUVA.
+--   f. Experience with NABARD, SIDBI, banks and government departments.
 -- =============================================================================
