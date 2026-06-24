@@ -73,7 +73,7 @@ export function Footer() {
         {/* Top: brand + newsletter */}
         <div className="grid gap-10 border-b border-border pb-12 lg:grid-cols-2">
           <div className="max-w-sm">
-            <Logo className="h-14 w-auto" />
+            <Logo withWordmark className="h-12 w-auto" wordmarkClassName="text-2xl" />
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               The National Entrepreneurship Development Center empowers youth,
               students, professionals, women, and rural communities to become

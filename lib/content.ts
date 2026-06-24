@@ -163,11 +163,55 @@ export const EDP_CURRICULUM = [
 export const EDP_SCHEDULE_NOTE =
   "Each session is a one-hour live online lecture, with a 15-minute break after the first session.";
 
+/**
+ * The EDP Advanced Masterclass — our advanced course program for people who
+ * ALREADY run a business and want to scale it (a step up from the foundation
+ * EDP, which is built for aspiring founders). Featured as its own landing
+ * section (#masterclass). All marketing copy lives here; reword it freely.
+ */
+export const MASTERCLASS = {
+  eyebrow: "EDP Advanced Masterclass",
+  title: "Already running a business? Learn to scale it.",
+  intro:
+    "The EDP Advanced Masterclass is our advanced course program for existing business owners. Go beyond the fundamentals with a mentor-led masterclass on funding, systems, and market expansion, built to turn a running business into a growing one.",
+  pillars: [
+    {
+      icon: "Workflow",
+      title: "Scale with systems",
+      body: "Move from doing everything yourself to a business that runs on clear processes, the right team, and repeatable systems.",
+    },
+    {
+      icon: "Banknote",
+      title: "Funding for growth",
+      body: "Unlock growth capital through bank loans, MSME subsidies, and government schemes built for established units.",
+    },
+    {
+      icon: "Globe",
+      title: "Reach new markets",
+      body: "Win new customers online and offline with sharper branding, digital sales, and stronger B2B reach.",
+    },
+    {
+      icon: "LineChart",
+      title: "Sharpen profitability",
+      body: "Tighten your pricing, margins, and cash flow, and build a growth strategy backed by real numbers.",
+    },
+  ],
+  highlights: [
+    "For existing business owners & MSMEs",
+    "Advanced, mentor-led sessions",
+    "Online & hybrid delivery",
+    "Certificate of completion by NEDC",
+  ],
+  ctaLabel: "Register for the Masterclass",
+  footnote:
+    "Built on the NEDC EDP. New to business? Start with the foundation 5-day program first.",
+} as const;
+
 /** Contact details — PLACEHOLDERS the team fills in. */
 export const CONTACT = {
   phone: "+91 91152 59995",
   whatsapp: "919115259995", // digits only, for wa.me links
-  email: "info@nedc.example",
+  email: "info@nedc.co.in",
   address: "NEDC Office, [City], India",
   socials: {
     facebook: "#",

@@ -30,7 +30,12 @@ const mobileLinkClass =
 function Wordmark({ onClick }: { onClick?: () => void }) {
   return (
     <span onClick={onClick}>
-      <Logo className="h-11 w-auto sm:h-12" priority />
+      <Logo
+        withWordmark
+        priority
+        className="h-9 w-auto sm:h-10"
+        wordmarkClassName="text-xl"
+      />
     </span>
   );
 }

@@ -30,6 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { WhyNedc } from "@/components/sections/WhyNedc";
 import { AboutProgram } from "@/components/sections/AboutProgram";
 import { Curriculum } from "@/components/sections/Curriculum";
+import { AdvancedMasterclass } from "@/components/sections/AdvancedMasterclass";
 import { FounderJourney } from "@/components/sections/FounderJourney";
 import { WhoItsFor } from "@/components/sections/WhoItsFor";
 import { SchemeHub } from "@/components/sections/SchemeHub";
@@ -115,13 +116,13 @@ export default async function HomePage() {
           {/* ---------- Left: editorial copy + CTAs ---------- */}
           <div className="relative z-10 max-w-xl">
             {/* NEDC brand lockup — emblem + "NEDC" wordmark (the official logo) */}
-            <div className="mb-8">
+            <div className="mb-7">
               <Logo
                 withWordmark
                 subtitle
                 priority
-                className="h-12 w-auto"
-                wordmarkClassName="text-2xl"
+                className="h-16 w-auto"
+                wordmarkClassName="text-3xl"
               />
             </div>
 
@@ -417,6 +418,9 @@ export default async function HomePage() {
 
       {/* ================= CURRICULUM — the 5-day plan ================= */}
       <Curriculum />
+
+      {/* ================= EDP ADVANCED MASTERCLASS — for existing business owners ================= */}
+      <AdvancedMasterclass />
 
       {/* ================= THE FOUNDER JOURNEY (S6) ================= */}
       <FounderJourney />
