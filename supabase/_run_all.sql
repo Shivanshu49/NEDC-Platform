@@ -2,6 +2,11 @@
 -- NEDC Platform — ALL migrations + seed, in order.
 -- Paste this ENTIRE file into the Supabase SQL Editor and Run.
 -- Safe to re-run (every statement is idempotent).
+--
+-- Bundles migrations 0001–0008 + seed.sql. Regenerate this file whenever
+-- a new migration is added (it is a concatenation, not the source of truth).
+-- NOTE: seed_mentors.sql is applied SEPARATELY (run it on its own in the SQL
+-- Editor); it is intentionally not bundled here.
 -- ============================================================
 
 
@@ -552,6 +557,311 @@ alter table public.subscribers enable row level security;
 -- =============================================================================
 
 
+-- ====================== supabase/migrations/0005_plans.sql ======================
+
+-- =============================================================================
+-- 0005_plans.sql — Two-tier pricing (Basic + Premium) for the EDP
+-- =============================================================================
+-- Idempotent & additive — safe to re-run (Supabase dashboard → SQL Editor → Run).
+--
+-- Model: a cohort keeps `price_inr` as the BASIC tier price. `price_premium_inr`
+-- (nullable) is the optional higher tier — 1:1 mentorship, doubt-clearing,
+-- career guidance, and an exclusive session with the Organiser. Premium is
+-- offered for a cohort ONLY when this column is set (NULL = Basic only).
+--
+-- Security: both prices stay SERVER-AUTHORITATIVE. The browser sends a plan id
+-- ('basic' | 'premium'), NEVER an amount. /api/checkout derives the price from
+-- this table and records it on the `payments` row; the Razorpay webhook then
+-- validates the captured amount against THAT recorded amount (see CLAUDE.md §5).
+--
+-- FULFILLMENT (read this): the in-app dashboard is PLAN-AGNOSTIC by design — the
+-- access rule (CLAUDE.md §5) keys only on enrollments.status='active', so Basic
+-- and Premium currently see the same sessions/recordings in software. The
+-- Premium-only extras (1-on-1 mentorship, doubt-clearing, the "meet the
+-- Organiser" session) are delivered MANUALLY by staff, who identify Premium
+-- buyers by reading `enrollments.plan = 'premium'` in the Table Editor.
+--   ⚠ If you ever add PREMIUM-ONLY in-app content (e.g. a premium session or a
+--   "meet the organiser" Zoom link in the dashboard), you MUST gate it on
+--   enrollments.plan = 'premium' (in the app AND/OR a plan-aware RLS helper) —
+--   is_enrolled() alone will NOT separate the tiers.
+-- =============================================================================
+
+-- Premium tier price (paise). NULL = this cohort has no premium tier.
+alter table public.cohorts
+  add column if not exists price_premium_inr integer;
+
+comment on column public.cohorts.price_premium_inr is
+  'Premium tier price in paise (1:1 mentorship etc.). NULL = premium not offered for this cohort.';
+
+-- Record which tier each payment / enrollment is for.
+alter table public.payments
+  add column if not exists plan text not null default 'basic';
+alter table public.enrollments
+  add column if not exists plan text not null default 'basic';
+
+-- Constrain to the known plan ids (drop-then-add so re-runs don't error).
+alter table public.payments    drop constraint if exists payments_plan_check;
+alter table public.payments    add  constraint payments_plan_check    check (plan in ('basic','premium'));
+alter table public.enrollments drop constraint if exists enrollments_plan_check;
+alter table public.enrollments add  constraint enrollments_plan_check check (plan in ('basic','premium'));
+
+-- -----------------------------------------------------------------------------
+-- Set your real prices. EDIT the cohort id(s), then run:
+--   update public.cohorts
+--      set price_inr = 149900,          -- ₹1,499 (Basic)
+--          price_premium_inr = 189900   -- ₹1,899 (Premium)
+--    where id = '<your-cohort-id>';
+-- (Money is integer paise: 149900 = ₹1,499.00.)
+-- -----------------------------------------------------------------------------
+
+
+-- ====================== supabase/migrations/0006_profile_fields.sql ======================
+
+-- =============================================================================
+-- 0006_profile_fields.sql — richer student profile fields
+-- =============================================================================
+-- Idempotent & additive — safe to re-run (Supabase dashboard → SQL Editor → Run).
+--
+-- Adds the fields the dashboard profile shows/edits. A user may edit ONLY their
+-- own row, and ONLY these columns: the table-level UPDATE is revoked in 0001 and
+-- granted back per-column here (so a user still can't flip is_admin, etc.). The
+-- existing profiles_update_own RLS policy already restricts WHICH row.
+-- =============================================================================
+
+alter table public.profiles add column if not exists profession   text;
+alter table public.profiles add column if not exists organization text;  -- company / college
+alter table public.profiles add column if not exists city         text;
+alter table public.profiles add column if not exists bio          text;
+
+-- Extend the column-level UPDATE grant to the new editable fields
+-- (full_name + phone were already granted in 0001).
+grant update (full_name, phone, profession, organization, city, bio)
+  on public.profiles to authenticated;
+
+
+-- ====================== supabase/migrations/0007_avatars.sql ======================
+
+-- =============================================================================
+-- 0007_avatars.sql — profile photos + a one-time onboarding flag
+-- =============================================================================
+-- Idempotent & additive — safe to re-run (Supabase dashboard → SQL Editor → Run).
+--
+-- Adds two columns and the Storage plumbing the post-login "Complete your
+-- profile" flow needs:
+--   * profiles.avatar_url  — public URL of the student's uploaded photo (optional)
+--   * profiles.onboarded_at — when the user finished (or skipped) onboarding.
+--     NULL means "has never seen onboarding" → /dashboard routes them to /welcome
+--     once. Both "Finish" and "Skip for now" stamp it, so it only shows once.
+--
+-- As in 0006, table-level UPDATE on profiles is revoked (0001) and granted back
+-- ONLY per-column, so a user still can't flip is_admin. We re-grant the FULL
+-- editable column set here (GRANT is additive) to keep this the single source of
+-- truth for what a student may change.
+-- =============================================================================
+
+alter table public.profiles add column if not exists avatar_url   text;
+alter table public.profiles add column if not exists onboarded_at timestamptz;
+
+grant update (full_name, phone, profession, organization, city, bio, avatar_url, onboarded_at)
+  on public.profiles to authenticated;
+
+-- =============================================================================
+-- Storage: the "avatars" bucket
+-- =============================================================================
+-- PUBLIC bucket (avatars aren't secret; this is the standard Supabase pattern and
+-- lets <img>/next/image load them with no signed URL). Writes are still locked
+-- down by the RLS policies below: a user may only touch objects inside a folder
+-- named with their own user id (avatars/<uid>/...). Server-side limits cap the
+-- size (3 MB) and mime types as a backstop to the client-side checks.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'avatars',
+  'avatars',
+  true,
+  3145728, -- 3 MB
+  array['image/jpeg', 'image/png', 'image/webp']
+)
+on conflict (id) do update
+  set public            = excluded.public,
+      file_size_limit   = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;
+
+-- Anyone can READ avatars (the bucket is public).
+drop policy if exists "avatars_public_read" on storage.objects;
+create policy "avatars_public_read" on storage.objects
+  for select to anon, authenticated
+  using (bucket_id = 'avatars');
+
+-- A user may WRITE only inside their own folder: avatars/<their-uid>/...
+-- storage.foldername(name) -> {'<uid>', 'file.png'}; [1] is the first segment.
+drop policy if exists "avatars_user_insert" on storage.objects;
+create policy "avatars_user_insert" on storage.objects
+  for insert to authenticated
+  with check (
+    bucket_id = 'avatars'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+drop policy if exists "avatars_user_update" on storage.objects;
+create policy "avatars_user_update" on storage.objects
+  for update to authenticated
+  using (
+    bucket_id = 'avatars'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  )
+  with check (
+    bucket_id = 'avatars'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+drop policy if exists "avatars_user_delete" on storage.objects;
+create policy "avatars_user_delete" on storage.objects
+  for delete to authenticated
+  using (
+    bucket_id = 'avatars'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+
+-- ====================== supabase/migrations/0008_security_lints.sql ======================
+
+-- =============================================================================
+-- 0008_security_lints.sql — resolve Supabase Security Advisor WARN findings
+-- =============================================================================
+-- Idempotent & additive — safe to re-run (Supabase dashboard → SQL Editor → Run).
+-- Addresses the 9 WARN-level lints from the Security Advisor (2026-06-29):
+--
+--   0011 function_search_path_mutable  → pin search_path on set_updated_at
+--   0028/0029 SECURITY DEFINER exposed → remove the RPC reach of the trigger /
+--       event-trigger functions (handle_new_user, rls_auto_enable), and MOVE
+--       is_enrolled into a non-API schema (it must REMAIN security definer AND
+--       callable by RLS, so it can't simply have EXECUTE revoked).
+--   0025 public_bucket_allows_listing  → drop the unused broad SELECT policy on
+--       the public avatars bucket.
+--
+-- NOT fixable in SQL (dashboard toggle): auth_leaked_password_protection — enable
+-- it under Authentication → Sign In / Providers. Currently moot (this app is
+-- passwordless: magic-link + Google), but harmless to turn on for the future.
+-- =============================================================================
+
+
+-- -----------------------------------------------------------------------------
+-- 1) set_updated_at — pin search_path (lint 0011)
+-- -----------------------------------------------------------------------------
+-- A SECURITY INVOKER trigger function that only calls now() (in pg_catalog, which
+-- is always implicitly in scope), so an empty search_path is safe and clears the
+-- "role mutable search_path" flag.
+alter function public.set_updated_at() set search_path = '';
+
+
+-- -----------------------------------------------------------------------------
+-- 2) handle_new_user — remove RPC exposure (lints 0028 + 0029)
+-- -----------------------------------------------------------------------------
+-- AFTER INSERT trigger on auth.users. Trigger functions are invoked by the
+-- trigger mechanism regardless of the caller's EXECUTE privilege, so revoking
+-- EXECUTE does NOT affect signup — it only removes the pointless and
+-- unintended /rest/v1/rpc/handle_new_user endpoint.
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
+
+
+-- -----------------------------------------------------------------------------
+-- 3) rls_auto_enable — capture in version control + remove RPC exposure (0028+0029)
+-- -----------------------------------------------------------------------------
+-- This event-trigger function (wired to the `ensure_rls` event trigger) was
+-- created directly in the dashboard during an earlier hardening pass and was
+-- NEVER in this repo. It is recorded here so a restore recreates it. Like all
+-- trigger functions it runs via the event-trigger mechanism, so revoking EXECUTE
+-- is safe and only removes the /rest/v1/rpc/rls_auto_enable endpoint.
+create or replace function public.rls_auto_enable()
+  returns event_trigger language plpgsql security definer set search_path = 'pg_catalog'
+as $$
+declare cmd record;
+begin
+  for cmd in
+    select * from pg_event_trigger_ddl_commands()
+    where command_tag in ('CREATE TABLE', 'CREATE TABLE AS', 'SELECT INTO')
+      and object_type in ('table', 'partitioned table')
+  loop
+    if cmd.schema_name is not null and cmd.schema_name in ('public') then
+      begin
+        execute format('alter table if exists %s enable row level security', cmd.object_identity);
+        raise log 'rls_auto_enable: enabled RLS on %', cmd.object_identity;
+      exception when others then
+        raise log 'rls_auto_enable: failed to enable RLS on %', cmd.object_identity;
+      end;
+    end if;
+  end loop;
+end; $$;
+
+revoke execute on function public.rls_auto_enable() from public, anon, authenticated;
+
+-- Recreate the event trigger only if it is missing (it already exists in prod).
+do $$ begin
+  if not exists (select 1 from pg_event_trigger where evtname = 'ensure_rls') then
+    create event trigger ensure_rls on ddl_command_end
+      execute function public.rls_auto_enable();
+  end if;
+end $$;
+
+
+-- -----------------------------------------------------------------------------
+-- 4) is_enrolled — keep SECURITY DEFINER, relocate out of the API schema (0028+0029)
+-- -----------------------------------------------------------------------------
+-- is_enrolled MUST stay SECURITY DEFINER (it reads enrollments while bypassing
+-- that table's RLS, avoiding a recursive policy) and MUST stay callable by the
+-- `authenticated` role, because the sessions/recordings RLS policies invoke it.
+-- Revoking EXECUTE would break the student dashboard. Per Supabase guidance for
+-- SECURITY DEFINER helpers, the fix is to move it to a schema PostgREST does NOT
+-- expose, so there is no /rest/v1/rpc/is_enrolled endpoint while RLS can still
+-- call it.
+create schema if not exists private;
+revoke all on schema private from anon, authenticated;
+grant usage on schema private to authenticated; -- lets RLS policies resolve the fn
+
+create or replace function private.is_enrolled(p_cohort_id uuid)
+  returns boolean language sql security definer stable set search_path = public
+as $$
+  select exists (
+    select 1 from public.enrollments e
+    where e.cohort_id = p_cohort_id
+      and e.user_id = auth.uid()
+      and e.status = 'active'
+  );
+$$;
+revoke execute on function private.is_enrolled(uuid) from public, anon;
+grant  execute on function private.is_enrolled(uuid) to authenticated;
+
+-- Repoint the two policies that reference it, then drop the public copy.
+-- (No CASCADE: if any unknown object still depends on it the DROP fails loudly
+--  rather than silently removing access.)
+drop policy if exists sessions_select_enrolled on public.sessions;
+create policy sessions_select_enrolled on public.sessions
+  for select to authenticated using (private.is_enrolled(cohort_id));
+
+drop policy if exists recordings_select_enrolled on public.recordings;
+create policy recordings_select_enrolled on public.recordings
+  for select to authenticated using (
+    exists (select 1 from public.sessions s
+            where s.id = recordings.session_id
+              and private.is_enrolled(s.cohort_id))
+  );
+
+drop function if exists public.is_enrolled(uuid);
+
+
+-- -----------------------------------------------------------------------------
+-- 5) avatars bucket — drop the unused broad public-listing policy (lint 0025)
+-- -----------------------------------------------------------------------------
+-- The avatars bucket is PUBLIC, so images load via getPublicUrl() with no SELECT
+-- policy needed. The app never lists or downloads avatars through the RLS-checked
+-- client APIs (it only uploads, removes, and renders public URLs), so this broad
+-- SELECT — which lets anyone enumerate every file (and thus every user id) in the
+-- bucket — is unnecessary. Removing it stops directory listing; display keeps
+-- working via the public object URL. Writes remain locked to own-folder by the
+-- avatars_user_insert/update/delete policies (unchanged).
+drop policy if exists "avatars_public_read" on storage.objects;
+
+
 -- ====================== supabase/seed.sql ======================
 
 -- =============================================================================
@@ -593,10 +903,11 @@ values (
 on conflict (id) do nothing;
 
 -- ---------- Cohorts (dated runs — what students buy). Prices are in PAISE. ----------
-insert into public.cohorts (id, course_id, name, start_date, end_date, timezone, price_inr, capacity, status, enroll_open)
+-- price_inr = Basic tier (₹1,499); price_premium_inr = Premium tier (₹1,899).
+insert into public.cohorts (id, course_id, name, start_date, end_date, timezone, price_inr, price_premium_inr, capacity, status, enroll_open)
 values
-  ('0c0a5e00-0000-4000-8000-000000000011','0c0a5e00-0000-4000-8000-000000000001','July 2026 Batch','2026-07-14','2026-07-19','Asia/Kolkata',499900,40,'open',true),
-  ('0c0a5e00-0000-4000-8000-000000000012','0c0a5e00-0000-4000-8000-000000000001','September 2026 Batch','2026-09-08','2026-09-13','Asia/Kolkata',599900,40,'upcoming',true)
+  ('0c0a5e00-0000-4000-8000-000000000011','0c0a5e00-0000-4000-8000-000000000001','July 2026 Batch','2026-07-14','2026-07-19','Asia/Kolkata',149900,189900,40,'open',true),
+  ('0c0a5e00-0000-4000-8000-000000000012','0c0a5e00-0000-4000-8000-000000000001','September 2026 Batch','2026-09-08','2026-09-13','Asia/Kolkata',149900,189900,40,'upcoming',true)
 on conflict (id) do nothing;
 
 -- ---------- Speakers / mentors ----------
@@ -655,4 +966,3 @@ values
   ('0c0a5e00-0000-4000-8000-000000000057','What is your refund policy?','If you change your mind before the cohort starts, contact us for a full refund. Once the program begins, fees are non-refundable.',7,true),
   ('0c0a5e00-0000-4000-8000-000000000058','I have another question — how do I reach you?','Email us at hello@nedc.example and we will get back to you quickly.',8,true)
 on conflict (id) do nothing;
-
