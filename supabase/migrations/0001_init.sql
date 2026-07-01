@@ -72,6 +72,7 @@ create table if not exists public.profiles (
   updated_at  timestamptz not null default now()
 );
 
+drop trigger if exists profiles_set_updated_at on public.profiles;
 create trigger profiles_set_updated_at
   before update on public.profiles
   for each row execute function public.set_updated_at();
@@ -112,6 +113,7 @@ create table if not exists public.courses (
   updated_at     timestamptz not null default now()
 );
 
+drop trigger if exists courses_set_updated_at on public.courses;
 create trigger courses_set_updated_at
   before update on public.courses
   for each row execute function public.set_updated_at();
@@ -135,6 +137,7 @@ create table if not exists public.cohorts (
 );
 create index if not exists cohorts_course_id_idx on public.cohorts(course_id);
 
+drop trigger if exists cohorts_set_updated_at on public.cohorts;
 create trigger cohorts_set_updated_at
   before update on public.cohorts
   for each row execute function public.set_updated_at();
@@ -156,6 +159,7 @@ create table if not exists public.sessions (
 );
 create index if not exists sessions_cohort_id_idx on public.sessions(cohort_id);
 
+drop trigger if exists sessions_set_updated_at on public.sessions;
 create trigger sessions_set_updated_at
   before update on public.sessions
   for each row execute function public.set_updated_at();
@@ -184,6 +188,7 @@ create table if not exists public.enrollments (
 create index if not exists enrollments_user_id_idx   on public.enrollments(user_id);
 create index if not exists enrollments_cohort_id_idx on public.enrollments(cohort_id);
 
+drop trigger if exists enrollments_set_updated_at on public.enrollments;
 create trigger enrollments_set_updated_at
   before update on public.enrollments
   for each row execute function public.set_updated_at();
@@ -207,6 +212,7 @@ create table if not exists public.payments (
 );
 create index if not exists payments_user_id_idx on public.payments(user_id);
 
+drop trigger if exists payments_set_updated_at on public.payments;
 create trigger payments_set_updated_at
   before update on public.payments
   for each row execute function public.set_updated_at();
@@ -234,6 +240,7 @@ create table if not exists public.recordings (
 );
 create index if not exists recordings_session_id_idx on public.recordings(session_id);
 
+drop trigger if exists recordings_set_updated_at on public.recordings;
 create trigger recordings_set_updated_at
   before update on public.recordings
   for each row execute function public.set_updated_at();
@@ -252,6 +259,7 @@ create table if not exists public.speakers (
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now()
 );
+drop trigger if exists speakers_set_updated_at on public.speakers;
 create trigger speakers_set_updated_at
   before update on public.speakers
   for each row execute function public.set_updated_at();
@@ -275,6 +283,7 @@ create table if not exists public.team_members (
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now()
 );
+drop trigger if exists team_members_set_updated_at on public.team_members;
 create trigger team_members_set_updated_at
   before update on public.team_members
   for each row execute function public.set_updated_at();
@@ -288,6 +297,7 @@ create table if not exists public.gallery_images (
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now()
 );
+drop trigger if exists gallery_images_set_updated_at on public.gallery_images;
 create trigger gallery_images_set_updated_at
   before update on public.gallery_images
   for each row execute function public.set_updated_at();
@@ -301,6 +311,7 @@ create table if not exists public.faqs (
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now()
 );
+drop trigger if exists faqs_set_updated_at on public.faqs;
 create trigger faqs_set_updated_at
   before update on public.faqs
   for each row execute function public.set_updated_at();
