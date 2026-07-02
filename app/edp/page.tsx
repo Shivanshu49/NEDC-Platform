@@ -32,7 +32,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { EDP_CURRICULUM, CONTACT } from "@/lib/content";
 import { formatDate, formatDateRange } from "@/lib/format";
-import { getFeaturedProgram, pickNextCohort } from "@/lib/queries";
+import {
+  getFeaturedProgram,
+  pickNextCohort,
+  registrationState,
+  REGISTRATION_BADGE,
+} from "@/lib/queries";
 
 /*
  * TODO(meta-pixel): No Meta Pixel is installed anywhere in this codebase yet.
@@ -56,16 +61,28 @@ import { getFeaturedProgram, pickNextCohort } from "@/lib/queries";
 export const revalidate = 300;
 
 // Metadata derives the start date from the DB like the page body does (same
-// campaign-date fallback), so link previews never promise a stale date.
+// campaign-date fallback), so link previews never promise a stale date. OG and
+// Twitter are overridden too: the root layout's static copy still says
+// "Registrations opening soon", and Meta scrapes og:description for the ad's
+// link preview — paid traffic must never be told to wait.
 export async function generateMetadata(): Promise<Metadata> {
   const featured = await getFeaturedProgram();
   const nextCohort = featured ? pickNextCohort(featured.cohorts) : null;
   const startLabel = nextCohort
     ? formatDate(nextCohort.start_date)
     : "14 July 2026";
+  const title = "5-Day Entrepreneurship Development Program (EDP)";
+  const description = `Stop searching for a job. Learn to create one. NEDC's 5-day mentor-led EDP, live online, with government scheme guidance and a Certificate of Completion. Cohort starts ${startLabel}.`;
   return {
-    title: "5-Day Entrepreneurship Development Program (EDP)",
-    description: `Stop searching for a job. Learn to create one. NEDC's 5-day mentor-led EDP, live online, with government scheme guidance and a Certificate of Completion. Cohort starts ${startLabel}.`,
+    title,
+    description,
+    openGraph: {
+      type: "website",
+      siteName: "NEDC, National Entrepreneurship Development Center",
+      title,
+      description,
+    },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -137,7 +154,8 @@ const FAQ_QUESTIONS = new Set([
 export default async function EdpLandingPage() {
   const featured = await getFeaturedProgram();
   const nextCohort = featured ? pickNextCohort(featured.cohorts) : null;
-  const registrationOpen = Boolean(nextCohort?.enroll_open);
+  const regState = registrationState(nextCohort);
+  const registrationOpen = regState === "open";
   // The campaign promises 14 July; fall back to the campaign dates if the DB
   // is unreachable so the page never contradicts the ad.
   const dateLabel = nextCohort
@@ -186,9 +204,7 @@ export default async function EdpLandingPage() {
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand opacity-70 motion-reduce:hidden" />
                   <span className="relative inline-flex size-2 rounded-full bg-brand" />
                 </span>
-                {registrationOpen
-                  ? "Registrations open now"
-                  : "Registrations opening soon"}
+                {REGISTRATION_BADGE[regState]}
               </Badge>
 
               <h1 className="font-display mt-6 text-balance text-hero font-extrabold leading-[1.05] tracking-tight text-primary">
@@ -388,6 +404,7 @@ export default async function EdpLandingPage() {
                 dateLabel={dateLabel}
                 cohortId={registrationOpen ? nextCohort!.id : undefined}
                 cohortName={registrationOpen ? nextCohort!.name : undefined}
+                registrationClosed={regState === "closed"}
               />
             </div>
 

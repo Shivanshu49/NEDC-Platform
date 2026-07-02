@@ -27,6 +27,10 @@ export interface PricingPlansProps {
   dateLabel?: string;
   cohortId?: string;
   cohortName?: string;
+  /** True once the featured cohort's enrollment is genuinely over (it started
+   * or ended without `enroll_open`) — flips the fallback CTA from "opening
+   * soon" to "closed". Derive via lib/queries → registrationState(). */
+  registrationClosed?: boolean;
 }
 
 export function PricingPlans({
@@ -35,6 +39,7 @@ export function PricingPlans({
   dateLabel,
   cohortId,
   cohortName,
+  registrationClosed = false,
 }: PricingPlansProps) {
   const registrationOpen = Boolean(cohortId && cohortName);
   const priceFor = (id: string) =>
@@ -155,7 +160,9 @@ export function PricingPlans({
                   size="lg"
                   className="w-full"
                 >
-                  Registration opening soon
+                  {registrationClosed
+                    ? "Registrations closed"
+                    : "Registration opening soon"}
                 </Button>
               )}
             </div>

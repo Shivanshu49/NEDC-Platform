@@ -111,3 +111,39 @@ export function pickNextCohort(cohorts: Cohort[]): Cohort | null {
   const open = cohorts.find((c) => c.enroll_open && c.status !== "completed");
   return open ?? cohorts[0];
 }
+
+/**
+ * The SINGLE source of truth for "can you register right now?" copy, shared by
+ * every page with a cohort CTA (home, /edp) so they can never disagree.
+ *
+ * - "open"          — `cohorts.enroll_open` is true. This is exactly the flag
+ *                     /api/checkout enforces server-side, so the badge says
+ *                     "open" iff checkout actually accepts payments.
+ * - "opening_soon"  — no cohort yet, or the featured cohort hasn't started and
+ *                     staff haven't flipped `enroll_open` on.
+ * - "closed"        — the featured cohort already started (or ended) without
+ *                     `enroll_open`, i.e. registration is genuinely over.
+ */
+export type RegistrationState = "open" | "opening_soon" | "closed";
+
+export function registrationState(cohort: Cohort | null): RegistrationState {
+  if (!cohort) return "opening_soon";
+  if (cohort.enroll_open) return "open";
+  // Parsed at local midnight like lib/format's date helpers.
+  const started = new Date(`${cohort.start_date}T00:00:00`) <= new Date();
+  return started ? "closed" : "opening_soon";
+}
+
+/** Badge copy per state (the pulsing-dot pill on home + /edp). */
+export const REGISTRATION_BADGE: Record<RegistrationState, string> = {
+  open: "Registrations open now",
+  opening_soon: "Registrations opening soon",
+  closed: "Registrations closed",
+};
+
+/** CTA-button copy per state (hero buttons, pricing-card fallbacks). */
+export const REGISTRATION_CTA: Record<RegistrationState, string> = {
+  open: "Register now",
+  opening_soon: "Registration opening soon",
+  closed: "Registrations closed",
+};

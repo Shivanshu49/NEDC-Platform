@@ -18,6 +18,8 @@ export interface PricingRegistrationProps {
   dateLabel?: string;
   cohortId?: string;
   cohortName?: string;
+  /** Pass-through to PricingPlans — see registrationClosed there. */
+  registrationClosed?: boolean;
 }
 
 export function PricingRegistration({
@@ -26,6 +28,7 @@ export function PricingRegistration({
   dateLabel,
   cohortId,
   cohortName,
+  registrationClosed,
 }: PricingRegistrationProps) {
   return (
     <section id="register" className="scroll-mt-24 bg-panel/50 py-16 sm:py-24">
@@ -44,6 +47,7 @@ export function PricingRegistration({
             dateLabel={dateLabel}
             cohortId={cohortId}
             cohortName={cohortName}
+            registrationClosed={registrationClosed}
           />
         </div>
 

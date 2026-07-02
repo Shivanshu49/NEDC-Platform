@@ -43,6 +43,9 @@ import {
   getFeaturedProgram,
   getSpeakers,
   pickNextCohort,
+  registrationState,
+  REGISTRATION_BADGE,
+  REGISTRATION_CTA,
 } from "@/lib/queries";
 import { formatDateRange } from "@/lib/format";
 import { FOCUS_AREAS } from "@/lib/content";
@@ -86,7 +89,10 @@ export default async function HomePage() {
     ? formatDateRange(nextCohort.start_date, nextCohort.end_date)
     : "~15 June (dates TBA)";
   // Real checkout only opens when a cohort is actually accepting enrollments.
-  const registrationOpen = Boolean(nextCohort?.enroll_open);
+  // Shared three-state copy (open / opening soon / closed) via lib/queries so
+  // this page and /edp can never disagree.
+  const regState = registrationState(nextCohort);
+  const registrationOpen = regState === "open";
 
   return (
     <>
@@ -134,9 +140,7 @@ export default async function HomePage() {
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand opacity-70 motion-reduce:hidden" />
                 <span className="relative inline-flex size-2 rounded-full bg-brand" />
               </span>
-              {registrationOpen
-                ? "Registrations open now"
-                : "Registrations opening soon"}
+              {REGISTRATION_BADGE[regState]}
             </Badge>
 
             <h1 className="font-display mt-6 text-balance text-hero font-extrabold leading-[1.0] tracking-tight text-primary">
@@ -194,7 +198,7 @@ export default async function HomePage() {
                 size="lg"
                 className="w-full hover:-translate-y-0.5 sm:w-auto"
               >
-                {registrationOpen ? "Register now" : "Registration opening soon"}
+                {REGISTRATION_CTA[regState]}
               </Button>
             </div>
 
@@ -522,6 +526,7 @@ export default async function HomePage() {
         dateLabel={nextCohort ? cohortDate : undefined}
         cohortId={registrationOpen ? nextCohort!.id : undefined}
         cohortName={registrationOpen ? nextCohort!.name : undefined}
+        registrationClosed={regState === "closed"}
       />
 
       {/* ================= ABOUT & CREDIBILITY (S14) ================= */}
