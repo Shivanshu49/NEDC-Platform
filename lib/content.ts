@@ -207,12 +207,16 @@ export const MASTERCLASS = {
     "Built on the NEDC EDP. New to business? Start with the foundation 5-day program first.",
 } as const;
 
-/** Contact details — PLACEHOLDERS the team fills in. */
+/**
+ * Contact details. No office address is published yet — when NEDC has a real
+ * one, add an `address` field here and render it in the Footer, /contact, and
+ * the terms/privacy pages. Social links are still placeholders ("#") — real
+ * handles to be provided by the team.
+ */
 export const CONTACT = {
   phone: "+91 91152 59995",
   whatsapp: "919115259995", // digits only, for wa.me links
   email: "info@nedc.co.in",
-  address: "NEDC Office, [City], India",
   socials: {
     facebook: "#",
     instagram: "#",

@@ -165,14 +165,15 @@ export default function PrivacyPage() {
               >
                 {CONTACT.email}
               </a>
-              , call{" "}
+{" "}
+              or call{" "}
               <a
                 href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
                 className="rounded-sm font-medium text-brand underline underline-offset-2 hover:text-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 {CONTACT.phone}
               </a>
-              , or write to us at {CONTACT.address}.
+              .
             </p>
           </div>
         </div>

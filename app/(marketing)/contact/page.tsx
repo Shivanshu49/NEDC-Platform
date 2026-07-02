@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import { Container } from "@/components/Container";
 import { SectionHeading } from "@/components/SectionHeading";
 import { OffsetCard } from "@/components/OffsetCard";
@@ -38,7 +38,8 @@ export default function ContactPage() {
       value: "Chat with us",
       href: `https://wa.me/${CONTACT.whatsapp}`,
     },
-    { icon: MapPin, label: "Office", value: CONTACT.address },
+    // No office address is published yet — re-add an "Office" card here (and
+    // the footer/legal-page mentions) once NEDC has a real address.
   ];
 
   return (
