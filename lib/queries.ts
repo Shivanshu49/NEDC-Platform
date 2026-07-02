@@ -29,8 +29,16 @@ function publicClient() {
       // Resilience: never let a slow/unreachable Supabase hang a page render.
       // Cap every read at 4s; on timeout the query returns empty and the page
       // still renders (the helpers below already handle null/empty data).
+      // `next.revalidate` puts these reads in Next's data cache at the same
+      // 5-minute cadence as the pages' `revalidate = 300` — needed since the
+      // root layout's generateMetadata now reads cohort state on EVERY route,
+      // and this keeps that read cached instead of per-request.
       fetch: (input, init) =>
-        fetch(input, { ...init, signal: AbortSignal.timeout(4000) }),
+        fetch(input, {
+          ...init,
+          signal: AbortSignal.timeout(4000),
+          next: { revalidate: 300 },
+        }),
     },
   });
 }
