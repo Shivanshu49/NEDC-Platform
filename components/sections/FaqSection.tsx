@@ -15,12 +15,14 @@ import {
  * figures — those live with the published policy / registration flow.
  */
 
-type QA = {
+export type QA = {
   question: string;
   answer: string;
 };
 
-const FAQS: QA[] = [
+// Exported so the /edp ad landing page can reuse (a trimmed subset of) the same
+// answers instead of maintaining a second copy that drifts.
+export const FAQS: QA[] = [
   {
     question: "Who is this for?",
     answer:
