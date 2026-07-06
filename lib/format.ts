@@ -57,6 +57,36 @@ export function sessionStatus(
   return "live";
 }
 
+/**
+ * A daily session window like "6:30 PM to 8:30 PM" from two wall-clock time
+ * strings ("18:30" or "18:30:00"). The inputs are already in the cohort's local
+ * timezone (IST), so we format the wall-clock directly and never shift zones.
+ * Returns null if either bound is missing/malformed (caller can then hide it).
+ */
+export function formatTimeRange(
+  start: string | null | undefined,
+  end: string | null | undefined,
+): string | null {
+  const fmt = (t: string): string | null => {
+    const [hRaw, mRaw] = t.split(":");
+    const h = Number(hRaw);
+    const m = Number(mRaw ?? "0");
+    if (!Number.isInteger(h) || h < 0 || h > 23 || !Number.isInteger(m) || m < 0 || m > 59) {
+      return null;
+    }
+    const period = h >= 12 ? "PM" : "AM";
+    const hour12 = h % 12 === 0 ? 12 : h % 12;
+    return m === 0
+      ? `${hour12} ${period}`
+      : `${hour12}:${String(m).padStart(2, "0")} ${period}`;
+  };
+  if (!start || !end) return null;
+  const s = fmt(start);
+  const e = fmt(end);
+  if (!s || !e) return null;
+  return `${s} to ${e}`;
+}
+
 /** Friendly range, e.g. "14–19 July 2026" or "30 July – 4 August 2026". */
 export function formatDateRange(startIso: string, endIso: string): string {
   const start = new Date(`${startIso}T00:00:00`);

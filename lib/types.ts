@@ -40,8 +40,10 @@ export type Cohort = {
   start_date: string; // ISO date, e.g. "2026-07-14"
   end_date: string;
   timezone: string;
-  price_inr: number; // PAISE — divide by 100 for rupees (see lib/format.ts). Basic tier.
-  price_premium_inr: number | null; // PAISE — optional Premium tier; null = Basic only.
+  price_inr: number; // PAISE — divide by 100 for rupees (see lib/format.ts). The single course price.
+  price_premium_inr: number | null; // PAISE — legacy of the retired premium tier; null now (kept for history).
+  daily_start_time: string | null; // wall-clock "HH:MM[:SS]" in `timezone` (e.g. "18:30:00" = 6:30 PM IST); null = not published.
+  daily_end_time: string | null; // wall-clock "HH:MM[:SS]" in `timezone` (e.g. "20:30:00" = 8:30 PM IST); null = not published.
   capacity: number | null;
   status: CohortStatus;
   enroll_open: boolean;

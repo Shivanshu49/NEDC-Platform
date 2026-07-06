@@ -7,10 +7,7 @@ import { ContactForm } from "@/components/ContactForm";
 import {
   FacebookIcon,
   InstagramIcon,
-  LinkedinIcon,
-  TelegramIcon,
   WhatsappIcon,
-  YoutubeIcon,
 } from "@/components/BrandIcons";
 import { CONTACT } from "@/lib/content";
 
@@ -23,9 +20,6 @@ export const metadata: Metadata = {
 const SOCIALS = [
   { label: "Facebook", href: CONTACT.socials.facebook, icon: FacebookIcon },
   { label: "Instagram", href: CONTACT.socials.instagram, icon: InstagramIcon },
-  { label: "LinkedIn", href: CONTACT.socials.linkedin, icon: LinkedinIcon },
-  { label: "YouTube", href: CONTACT.socials.youtube, icon: YoutubeIcon },
-  { label: "Telegram", href: CONTACT.socials.telegram, icon: TelegramIcon },
 ];
 
 export default function ContactPage() {

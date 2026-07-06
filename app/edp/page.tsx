@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { EDP_CURRICULUM, CONTACT } from "@/lib/content";
-import { formatDate, formatDateRange } from "@/lib/format";
+import { formatDate, formatDateRange, formatTimeRange } from "@/lib/format";
 import {
   getFeaturedProgram,
   pickNextCohort,
@@ -70,7 +70,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const nextCohort = featured ? pickNextCohort(featured.cohorts) : null;
   const startLabel = nextCohort
     ? formatDate(nextCohort.start_date)
-    : "14 July 2026";
+    : "27 July 2026";
   const title = "5-Day Entrepreneurship Development Program (EDP)";
   const description = `Stop searching for a job. Learn to create one. NEDC's 5-day mentor-led EDP, live online, with government scheme guidance and a Certificate of Completion. Cohort starts ${startLabel}.`;
   return {
@@ -156,12 +156,15 @@ export default async function EdpLandingPage() {
   const nextCohort = featured ? pickNextCohort(featured.cohorts) : null;
   const regState = registrationState(nextCohort);
   const registrationOpen = regState === "open";
-  // The campaign promises 14 July; fall back to the campaign dates if the DB
+  // The campaign promises 27 July; fall back to the campaign dates if the DB
   // is unreachable so the page never contradicts the ad.
   const dateLabel = nextCohort
     ? formatDateRange(nextCohort.start_date, nextCohort.end_date)
-    : "14 to 19 July 2026";
-  const startLabel = nextCohort ? formatDate(nextCohort.start_date) : "14 July 2026";
+    : "27 to 31 July 2026";
+  const startLabel = nextCohort ? formatDate(nextCohort.start_date) : "27 July 2026";
+  const timeLabel = nextCohort
+    ? formatTimeRange(nextCohort.daily_start_time, nextCohort.daily_end_time)
+    : "6:30 PM to 8:30 PM";
   const faqs = FAQS.filter((f) => FAQ_QUESTIONS.has(f.question));
   const year = new Date().getFullYear();
 
@@ -342,7 +345,8 @@ export default async function EdpLandingPage() {
               ))}
             </ol>
             <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-muted-foreground">
-              Two live one-hour sessions each day, held online. {dateLabel}.
+              Two live one-hour sessions each day, held online
+              {timeLabel ? `, ${timeLabel} IST` : ""}. {dateLabel}.
             </p>
           </Container>
         </section>
@@ -392,16 +396,16 @@ export default async function EdpLandingPage() {
             <SectionHeading
               center
               eyebrow="Registration"
-              title="Choose your plan"
-              subtitle="Same mentor-led cohort, two ways to join. Pay once for your cohort; no subscriptions."
+              title="Enroll in the Advance Certificate Course"
+              subtitle="One complete program, one price. Live mentor-led sessions, personal 1-on-1 mentorship, and a Certificate of Completion by NEDC. Pay once for your cohort; no subscriptions."
             />
 
             <div className="mt-10">
-              {/* Keeps the heading outline h2 → h3 (the cards render h3 names). */}
+              {/* Keeps the heading outline h2 → h3 (the card renders an h3 name). */}
               <PricingPlans
                 basicPriceInr={nextCohort?.price_inr}
-                premiumPriceInr={nextCohort?.price_premium_inr ?? null}
                 dateLabel={dateLabel}
+                timeLabel={timeLabel ?? undefined}
                 cohortId={registrationOpen ? nextCohort!.id : undefined}
                 cohortName={registrationOpen ? nextCohort!.name : undefined}
                 registrationClosed={regState === "closed"}

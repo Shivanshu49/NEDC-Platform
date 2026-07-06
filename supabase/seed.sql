@@ -37,11 +37,14 @@ values (
 on conflict (id) do nothing;
 
 -- ---------- Cohorts (dated runs — what students buy). Prices are in PAISE. ----------
--- price_inr = Basic tier (₹1,499); price_premium_inr = Premium tier (₹1,899).
-insert into public.cohorts (id, course_id, name, start_date, end_date, timezone, price_inr, price_premium_inr, capacity, status, enroll_open)
+-- Single offering: the "Advance Certificate Course" at ₹1,899 (price_inr = 189900).
+-- The retired two-tier model left `price_premium_inr` in place for history; it is
+-- NULL now (no separate premium tier). daily_start_time/daily_end_time are the
+-- wall-clock daily session window in the cohort timezone (18:30–20:30 = 6:30–8:30 PM IST).
+insert into public.cohorts (id, course_id, name, start_date, end_date, timezone, price_inr, price_premium_inr, daily_start_time, daily_end_time, capacity, status, enroll_open)
 values
-  ('0c0a5e00-0000-4000-8000-000000000011','0c0a5e00-0000-4000-8000-000000000001','July 2026 Batch','2026-07-14','2026-07-19','Asia/Kolkata',149900,189900,40,'open',true),
-  ('0c0a5e00-0000-4000-8000-000000000012','0c0a5e00-0000-4000-8000-000000000001','September 2026 Batch','2026-09-08','2026-09-13','Asia/Kolkata',149900,189900,40,'upcoming',true)
+  ('0c0a5e00-0000-4000-8000-000000000011','0c0a5e00-0000-4000-8000-000000000001','July 2026 Batch','2026-07-27','2026-07-31','Asia/Kolkata',189900,null,'18:30','20:30',40,'open',true),
+  ('0c0a5e00-0000-4000-8000-000000000012','0c0a5e00-0000-4000-8000-000000000001','September 2026 Batch','2026-09-08','2026-09-13','Asia/Kolkata',189900,null,'18:30','20:30',40,'upcoming',true)
 on conflict (id) do nothing;
 
 -- ---------- Speakers / mentors ----------

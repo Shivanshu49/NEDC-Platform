@@ -210,18 +210,21 @@ export const MASTERCLASS = {
 /**
  * Contact details. No office address is published yet — when NEDC has a real
  * one, add an `address` field here and render it in the Footer, /contact, and
- * the terms/privacy pages. Social links are still placeholders ("#") — real
- * handles to be provided by the team.
+ * the terms/privacy pages.
+ *
+ * Socials: only the channels with a real, live URL are listed — the Footer and
+ * /contact map over exactly these keys, so an absent channel simply shows no
+ * icon (no dead "#" links). LinkedIn, YouTube, and Telegram are intentionally
+ * omitted until NEDC has real handles for them; add a key here to bring an icon
+ * back. (Dr. Bipin's personal Facebook lives only in the Organiser section, not
+ * here — this object is NEDC's official channels.)
  */
 export const CONTACT = {
   phone: "+91 91152 59995",
   whatsapp: "919115259995", // digits only, for wa.me links
   email: "info@nedc.co.in",
   socials: {
-    facebook: "#",
-    instagram: "#",
-    linkedin: "#",
-    youtube: "#",
-    telegram: "#",
+    facebook: "https://www.facebook.com/profile.php?id=61591656508413",
+    instagram: "https://www.instagram.com/nedc.grnoida/",
   },
 };

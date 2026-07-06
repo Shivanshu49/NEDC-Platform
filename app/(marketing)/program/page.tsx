@@ -26,7 +26,7 @@ import { Curriculum } from "@/components/sections/Curriculum";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { EmptyState } from "@/components/EmptyState";
 import { getFeaturedProgram, pickNextCohort } from "@/lib/queries";
-import { formatDateRange } from "@/lib/format";
+import { formatDateRange, formatTimeRange } from "@/lib/format";
 import {
   EDP_INTRO,
   EDP_OBJECTIVES,
@@ -70,6 +70,9 @@ export default async function ProgramPage() {
   const dateLabel = nextCohort
     ? formatDateRange(nextCohort.start_date, nextCohort.end_date)
     : undefined;
+  const timeLabel = nextCohort
+    ? formatTimeRange(nextCohort.daily_start_time, nextCohort.daily_end_time)
+    : null;
   const otherBatches = cohorts.filter(
     (c) =>
       c.id !== nextCohort?.id &&
@@ -225,15 +228,15 @@ export default async function ProgramPage() {
             center
             eyebrow="Register"
             title="Reserve your seat"
-            subtitle="Two plans: Basic, or Premium with 1-on-1 mentorship. Secure payment via Razorpay (UPI, cards & netbanking). On success you'll get an instant receipt and email confirmation."
+            subtitle="One complete program: the Advance Certificate Course, with live mentor-led sessions and personal 1-on-1 mentorship. Secure payment via Razorpay (UPI, cards & netbanking). On success you'll get an instant receipt and email confirmation."
           />
 
           {nextCohort ? (
             <div className="mt-14">
               <PricingPlans
                 basicPriceInr={nextCohort.price_inr}
-                premiumPriceInr={nextCohort.price_premium_inr}
                 dateLabel={dateLabel}
+                timeLabel={timeLabel ?? undefined}
                 cohortId={registrationOpen ? nextCohort.id : undefined}
                 cohortName={registrationOpen ? nextCohort.name : undefined}
               />

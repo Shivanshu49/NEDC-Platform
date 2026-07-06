@@ -9,7 +9,7 @@ import {
   Mic2,
 } from "lucide-react";
 import { Container } from "@/components/Container";
-import { YoutubeIcon } from "@/components/BrandIcons";
+import { FacebookIcon, YoutubeIcon } from "@/components/BrandIcons";
 
 /**
  * Section — "The Organiser".
@@ -179,7 +179,9 @@ export function Organiser() {
             ))}
           </ul>
 
-          {/* CTAs — portfolio + YouTube (open in a new tab) */}
+          {/* CTAs — portfolio + YouTube + personal Facebook (open in a new tab).
+              These are Dr. Bipin's PERSONAL links; the NEDC-official socials live
+              only in the sitewide Footer, deliberately separate from these. */}
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
             <a
               href="https://drbipin.in"
@@ -198,6 +200,15 @@ export function Organiser() {
             >
               <YoutubeIcon className="size-4" />
               Watch the podcast
+            </a>
+            <a
+              href="https://www.facebook.com/bipin.srivastava.9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+            >
+              <FacebookIcon className="size-4" />
+              Follow on Facebook
             </a>
           </div>
         </div>

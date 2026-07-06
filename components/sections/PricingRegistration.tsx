@@ -7,15 +7,15 @@ import { SectionHeading } from "@/components/SectionHeading";
 /**
  * S12 — Pricing / Registration.
  *
- * Two mentor-led EDP plans (Basic + Premium), with Premium steered as the value
- * pick. Honest by design: prices come from the DB and real Razorpay checkout
- * appears only once a concrete open cohort is passed in — otherwise the cards
- * fall back to truthful "Opening Soon" buttons instead of inventing a number.
+ * The single mentor-led EDP offering, the "Advance Certificate Course". Honest by
+ * design: the price comes from the DB and real Razorpay checkout appears only once
+ * a concrete open cohort is passed in — otherwise the card falls back to a truthful
+ * "Opening Soon" button instead of inventing a number.
  */
 export interface PricingRegistrationProps {
   basicPriceInr?: number;
-  premiumPriceInr?: number | null;
   dateLabel?: string;
+  timeLabel?: string;
   cohortId?: string;
   cohortName?: string;
   /** Pass-through to PricingPlans — see registrationClosed there. */
@@ -24,8 +24,8 @@ export interface PricingRegistrationProps {
 
 export function PricingRegistration({
   basicPriceInr,
-  premiumPriceInr,
   dateLabel,
+  timeLabel,
   cohortId,
   cohortName,
   registrationClosed,
@@ -36,15 +36,15 @@ export function PricingRegistration({
         <SectionHeading
           center
           eyebrow="Registration"
-          title="Choose your plan."
-          subtitle="Same mentor-led cohort, two ways to join. Start with Basic, or go Premium for 1-on-1 mentorship and a personal path from idea to a working business."
+          title="Reserve your seat"
+          subtitle="One complete program, one price: the Advance Certificate Course. Live mentor-led sessions, personal 1-on-1 mentorship, and a Certificate of Completion by NEDC. Pay once for your cohort; no subscriptions."
         />
 
         <div className="mt-12">
           <PricingPlans
             basicPriceInr={basicPriceInr}
-            premiumPriceInr={premiumPriceInr}
             dateLabel={dateLabel}
+            timeLabel={timeLabel}
             cohortId={cohortId}
             cohortName={cohortName}
             registrationClosed={registrationClosed}

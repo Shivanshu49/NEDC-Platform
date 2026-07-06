@@ -3,7 +3,7 @@
 -- Paste this ENTIRE file into the Supabase SQL Editor and Run.
 -- Safe to re-run (every statement is idempotent).
 --
--- Bundles migrations 0001–0008 + seed.sql. Regenerate this file whenever
+-- Bundles migrations 0001–0009 + seed.sql. Regenerate this file whenever
 -- a new migration is added (it is a concatenation, not the source of truth).
 -- NOTE: seed_mentors.sql is applied SEPARATELY (run it on its own in the SQL
 -- Editor); it is intentionally not bundled here.
@@ -862,6 +862,22 @@ drop function if exists public.is_enrolled(uuid);
 drop policy if exists "avatars_public_read" on storage.objects;
 
 
+-- ====================== supabase/migrations/0009_cohort_session_time.sql ======================
+
+-- Daily live-session window (e.g. 6:30 PM to 8:30 PM) as structured cohort fields
+-- so the marketing pages render it from the DB. Stored TZ-naive (`time`) and read
+-- as wall-clock in the cohort's `timezone` (Asia/Kolkata / IST). NULL = not published.
+alter table public.cohorts
+  add column if not exists daily_start_time time;
+alter table public.cohorts
+  add column if not exists daily_end_time time;
+
+comment on column public.cohorts.daily_start_time is
+  'Daily live-session start, wall-clock in cohorts.timezone (e.g. 18:30 = 6:30 PM IST). NULL = not published.';
+comment on column public.cohorts.daily_end_time is
+  'Daily live-session end, wall-clock in cohorts.timezone (e.g. 20:30 = 8:30 PM IST). NULL = not published.';
+
+
 -- ====================== supabase/seed.sql ======================
 
 -- =============================================================================
@@ -903,11 +919,14 @@ values (
 on conflict (id) do nothing;
 
 -- ---------- Cohorts (dated runs — what students buy). Prices are in PAISE. ----------
--- price_inr = Basic tier (₹1,499); price_premium_inr = Premium tier (₹1,899).
-insert into public.cohorts (id, course_id, name, start_date, end_date, timezone, price_inr, price_premium_inr, capacity, status, enroll_open)
+-- Single offering: the "Advance Certificate Course" at ₹1,899 (price_inr = 189900).
+-- The retired two-tier model left `price_premium_inr` in place for history; it is
+-- NULL now (no separate premium tier). daily_start_time/daily_end_time are the
+-- wall-clock daily session window in the cohort timezone (18:30–20:30 = 6:30–8:30 PM IST).
+insert into public.cohorts (id, course_id, name, start_date, end_date, timezone, price_inr, price_premium_inr, daily_start_time, daily_end_time, capacity, status, enroll_open)
 values
-  ('0c0a5e00-0000-4000-8000-000000000011','0c0a5e00-0000-4000-8000-000000000001','July 2026 Batch','2026-07-14','2026-07-19','Asia/Kolkata',149900,189900,40,'open',true),
-  ('0c0a5e00-0000-4000-8000-000000000012','0c0a5e00-0000-4000-8000-000000000001','September 2026 Batch','2026-09-08','2026-09-13','Asia/Kolkata',149900,189900,40,'upcoming',true)
+  ('0c0a5e00-0000-4000-8000-000000000011','0c0a5e00-0000-4000-8000-000000000001','July 2026 Batch','2026-07-27','2026-07-31','Asia/Kolkata',189900,null,'18:30','20:30',40,'open',true),
+  ('0c0a5e00-0000-4000-8000-000000000012','0c0a5e00-0000-4000-8000-000000000001','September 2026 Batch','2026-09-08','2026-09-13','Asia/Kolkata',189900,null,'18:30','20:30',40,'upcoming',true)
 on conflict (id) do nothing;
 
 -- ---------- Speakers / mentors ----------

@@ -5,13 +5,13 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { PricingPlans } from "@/components/PricingPlans";
 import { EmptyState } from "@/components/EmptyState";
 import { getFeaturedProgram, pickNextCohort } from "@/lib/queries";
-import { formatDateRange } from "@/lib/format";
+import { formatDateRange, formatTimeRange } from "@/lib/format";
 
 export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Pricing & enroll",
   description:
-    "Two simple plans for the NEDC live online program: Basic, or Premium with 1-on-1 mentorship. Pay once for your cohort.",
+    "One simple price for the NEDC live online program: the Advance Certificate Course, with live mentor-led sessions and 1-on-1 mentorship. Pay once for your cohort.",
 };
 
 export default async function PricingPage() {
@@ -22,6 +22,9 @@ export default async function PricingPage() {
   const dateLabel = nextCohort
     ? formatDateRange(nextCohort.start_date, nextCohort.end_date)
     : undefined;
+  const timeLabel = nextCohort
+    ? formatTimeRange(nextCohort.daily_start_time, nextCohort.daily_end_time)
+    : null;
 
   // Other open/upcoming batches a learner could pick instead of the next one.
   const otherBatches = cohorts.filter(
@@ -33,8 +36,8 @@ export default async function PricingPage() {
       <Container>
         <SectionHeading
           eyebrow="Pricing"
-          title="One program, two ways to join"
-          subtitle="No subscriptions, no hidden charges. Pay once for your cohort. Start with Basic, or go Premium for personal 1-on-1 mentorship."
+          title="One program, one price"
+          subtitle="No subscriptions, no hidden charges. Pay once for your cohort. The Advance Certificate Course includes live mentor-led sessions and personal 1-on-1 mentorship."
           center
           as="h1"
         />
@@ -45,8 +48,8 @@ export default async function PricingPage() {
             <h2 className="sr-only">Plans</h2>
             <PricingPlans
               basicPriceInr={nextCohort.price_inr}
-              premiumPriceInr={nextCohort.price_premium_inr}
               dateLabel={dateLabel}
+              timeLabel={timeLabel ?? undefined}
               cohortId={registrationOpen ? nextCohort.id : undefined}
               cohortName={registrationOpen ? nextCohort.name : undefined}
             />

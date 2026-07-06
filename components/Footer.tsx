@@ -3,13 +3,7 @@ import { Mail, Phone } from "lucide-react";
 import { Container } from "@/components/Container";
 import { Logo } from "@/components/Logo";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import {
-  FacebookIcon,
-  InstagramIcon,
-  LinkedinIcon,
-  TelegramIcon,
-  YoutubeIcon,
-} from "@/components/BrandIcons";
+import { FacebookIcon, InstagramIcon } from "@/components/BrandIcons";
 import { CONTACT } from "@/lib/content";
 
 const LINK_COLUMNS = [
@@ -45,9 +39,6 @@ const LINK_COLUMNS = [
 const SOCIALS = [
   { href: CONTACT.socials.facebook, label: "Facebook", icon: FacebookIcon },
   { href: CONTACT.socials.instagram, label: "Instagram", icon: InstagramIcon },
-  { href: CONTACT.socials.linkedin, label: "LinkedIn", icon: LinkedinIcon },
-  { href: CONTACT.socials.youtube, label: "YouTube", icon: YoutubeIcon },
-  { href: CONTACT.socials.telegram, label: "Telegram", icon: TelegramIcon },
 ];
 
 export function Footer() {

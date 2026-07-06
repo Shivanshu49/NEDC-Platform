@@ -1,12 +1,18 @@
 /**
- * Pricing-tier CONTENT (names, taglines, feature lines). The PRICE itself is
- * NOT here — it lives in the DB (`cohorts.price_inr` for Basic,
- * `cohorts.price_premium_inr` for Premium) so it stays server-authoritative and
- * editable in the Supabase Table Editor. This file only drives what the pricing
- * cards SAY; the amount charged always comes from the DB via /api/checkout.
+ * Pricing CONTENT (name, tagline, feature lines) for the single course offering,
+ * the "Advance Certificate Course". The PRICE itself is NOT here — it lives in the
+ * DB (`cohorts.price_inr`) so it stays server-authoritative and editable in the
+ * Supabase Table Editor. This file only drives what the pricing card SAYS; the
+ * amount charged always comes from the DB via /api/checkout.
+ *
+ * HISTORY: NEDC previously sold two tiers (Basic / Premium). That was retired for
+ * one plan. The `PlanId` union and the DB `plan` column still allow 'premium' so
+ * the historical payment/enrollment ledger (and the dashboard's legacy badge) keep
+ * working — but only the single 'basic' plan below is ever offered or sent now.
  *
  * `id` matches the `plan` value stored on payments/enrollments and sent to
- * /api/checkout ('basic' | 'premium').
+ * /api/checkout. The single live plan uses 'basic' (the default checkout rail,
+ * priced from `cohorts.price_inr`).
  */
 
 export type PlanId = "basic" | "premium";
@@ -33,38 +39,30 @@ export type Plan = {
 export const PLANS: Plan[] = [
   {
     id: "basic",
-    name: "Basic",
-    tagline: "Everything you need to learn the program and get certified.",
-    ctaLabel: "Enroll in Basic",
+    name: "Advance Certificate Course",
+    tagline:
+      "One complete program: live mentor-led sessions plus personal 1-on-1 mentorship to actually launch, not just learn.",
+    highlight: true,
+    ctaLabel: "Enroll now",
     features: [
       "All live mentor-led sessions",
       "Every session recorded in your dashboard",
-      "Templates, worksheets & resources",
-      "Live group Q&A with mentors",
-      "Certificate of Completion by NEDC",
-    ],
-  },
-  {
-    id: "premium",
-    name: "Premium",
-    tagline: "Personal mentorship to actually launch, not just learn.",
-    badge: "Most popular",
-    highlight: true,
-    ctaLabel: "Enroll in Premium",
-    inheritsLabel: "Everything in Basic, plus:",
-    features: [
       "1-on-1 mentorship sessions",
       "Personal doubt-clearing sessions",
       "Career & business guidance with mentors",
+      "Templates, worksheets & resources",
+      "Live group Q&A with mentors",
       "An exclusive session to meet the Organiser, Dr. Bipin Kumar Srivastava",
       "Priority support throughout the program",
+      "Certificate of Completion by NEDC",
     ],
     footnote: "Limited 1-on-1 mentorship seats per cohort.",
   },
 ];
 
-/** Plan content lookup by id. */
-export const PLAN_BY_ID: Record<PlanId, Plan> = PLANS.reduce(
+/** Plan content lookup by id. Only the single live plan ('basic') is present;
+ *  keyed by string since the retired 'premium' content no longer exists here. */
+export const PLAN_BY_ID: Record<string, Plan> = PLANS.reduce(
   (acc, p) => ({ ...acc, [p.id]: p }),
-  {} as Record<PlanId, Plan>,
+  {} as Record<string, Plan>,
 );

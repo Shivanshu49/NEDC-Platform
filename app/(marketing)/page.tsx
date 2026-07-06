@@ -47,7 +47,7 @@ import {
   REGISTRATION_BADGE,
   REGISTRATION_CTA,
 } from "@/lib/queries";
-import { formatDateRange } from "@/lib/format";
+import { formatDateRange, formatTimeRange } from "@/lib/format";
 import { FOCUS_AREAS } from "@/lib/content";
 
 // Re-fetch DB-backed content at most every 5 minutes (ISR). Static otherwise.
@@ -87,7 +87,10 @@ export default async function HomePage() {
   const nextCohort = featured ? pickNextCohort(featured.cohorts) : null;
   const cohortDate = nextCohort
     ? formatDateRange(nextCohort.start_date, nextCohort.end_date)
-    : "~15 June (dates TBA)";
+    : "27 to 31 July 2026";
+  const cohortTime = nextCohort
+    ? formatTimeRange(nextCohort.daily_start_time, nextCohort.daily_end_time)
+    : null;
   // Real checkout only opens when a cohort is actually accepting enrollments.
   // Shared three-state copy (open / opening soon / closed) via lib/queries so
   // this page and /edp can never disagree.
@@ -522,8 +525,8 @@ export default async function HomePage() {
       {/* ================= PRICING / REGISTRATION (S12) ================= */}
       <PricingRegistration
         basicPriceInr={nextCohort?.price_inr}
-        premiumPriceInr={nextCohort?.price_premium_inr ?? null}
         dateLabel={nextCohort ? cohortDate : undefined}
+        timeLabel={cohortTime ?? undefined}
         cohortId={registrationOpen ? nextCohort!.id : undefined}
         cohortName={registrationOpen ? nextCohort!.name : undefined}
         registrationClosed={regState === "closed"}
