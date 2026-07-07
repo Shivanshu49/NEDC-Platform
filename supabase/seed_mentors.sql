@@ -34,6 +34,15 @@ values
     '/speakers/ravi-gupta.jpg',
     2,
     true
+  ),
+  (
+    '5a715000-0000-4000-8000-000000000003',
+    'S M Rounaque Mustafa',
+    'Startup Coach and Technology Business Incubation Expert',
+    'A startup coach with over 25 years of experience in program development, technology commercialisation, technology business incubation, and early-stage venture funding. He has been instrumental in setting up and running five government-approved Technology Business Incubators, including those at IIM Lucknow and Delhi Technological University, and has incubated more than 1,000 startups while impacting over 15,000 aspiring entrepreneurs. He has managed a SEED corpus of over 300 crores and helped startups raise SEED to Series A funding through angel investors, venture capitalists, and corporate VCs. He has advised leading Indian PSUs and corporates such as IOCL, HPCL, ONGC, GAIL, BHEL, and Physics Wallah on open innovation and corporate venturing, and has delivered large public-private partnership programs with UNDP, NSTEDB-DST, Intel, BIRAC, MeitY, Startup India, and AIC-NITI Aayog. An MBA in Information Technology with a certificate in Entrepreneurship from the University of California, Berkeley, he is pursuing a PhD at DTU and teaches innovation, IPR, entrepreneurship, and venture financing at IIMs and IITs. He is the Founding President of the Indo Arab Angel Network.',
+    '/speakers/s-m-rounaque-mustafa.jpg',
+    3,
+    true
   )
 on conflict (id) do update set
   name         = excluded.name,
@@ -144,4 +153,71 @@ on conflict (id) do update set
 --   d. MSME Mentor — Walmart Vriddhi Program.
 --   e. Trainer — Delhi Police Project YUVA.
 --   f. Experience with NABARD, SIDBI, banks and government departments.
+-- =============================================================================
+
+
+-- =============================================================================
+-- FULL PROFILE — reference (source: his CV / mentor profile, 2026-07-07)
+-- Kept here so the complete profile is preserved; the public card shows the short
+-- bio above. Contact details are intentionally NOT published on the site.
+-- -----------------------------------------------------------------------------
+-- Name:     S M Rounaque Mustafa
+-- Role:     Startup Coach | Technology Business Incubation & Early-Stage Venture Funding
+-- LinkedIn: https://in.linkedin.com/in/srmustafa/
+-- (Phone & personal email are in the source document — kept OUT of this repo for privacy.)
+--
+-- PROFILE SNAPSHOT
+--   A passionate startup coach with 25+ years of experience in program development,
+--   technology commercialisation, technology business incubation and early-stage
+--   venture funding. Highly networked across the IT industry, startup ecosystem and
+--   investment world (VCs, incubators, angel networks, industry forums & associations).
+--
+-- 1. INCUBATION & ECOSYSTEM
+--   a. Set up & ran 5 Govt-approved Technology Business Incubators — JSSATE-STEP,
+--      NIET, CHITKARA, IIM Lucknow, and Delhi Technological University / DCE —
+--      supported by various central ministries of the Govt of India.
+--   b. Incubated 1000+ startups; impacted 15,000+ aspiring entrepreneurs / startups
+--      through research and technology commercialisation.
+--   c. Managed a SEED corpus of more than 300+ crores; helped startups raise SEED
+--      to Series 'A' funding through Angels, VCs & Corporate VCs.
+--
+-- 2. CORPORATE & GOVERNMENT ADVISORY
+--   a. Advised many Indian PSUs and large corporates (IOCL, HPCL, ONGC, GAIL, NFL,
+--      BHEL, Physics Wallah) on open innovation and corporate venturing programs.
+--   b. Designed & developed startup policy, joint IP / technology development
+--      programs with startups & academia, and SEBI-regulated Corporate Venture
+--      Capital funds for strategically aligned startups.
+--   c. Worked on large PPP programs of national & global organizations promoting
+--      SMEs and startups — UNDP, InfoDev, NSTEDB-DST, Lockheed Martin, Intel,
+--      Indo US S&T Forum, DC-MSME, BIRAC, MeitY, TePP, DSIR, Startup India,
+--      AIC-NITI Aayog, Business Blaster, etc.
+--
+-- 3. ACADEMIA & RESEARCH
+--   a. MBA in Information Technology (India); Certificate course on Entrepreneurship
+--      (Theory to Practice), University of California, Berkeley, USA.
+--   b. Pursuing PhD (part time) at DTU — research: "Examining the factors affecting
+--      financial sustainability of Business Incubators: Indian Perspective".
+--   c. Speaks at conferences; teaches Innovation & technology management, IPR
+--      management, Entrepreneurship and Venture Financing at IIMs and IITs.
+--   d. Sits on advisory boards of incubators & startups and on investment
+--      committees of funding agencies.
+--
+-- 4. MEMBERSHIPS & ASSOCIATIONS
+--   a. TiE Delhi, ISBA, nBIA, IVCA (Indian Venture Capital Association), CII Startup.
+--   b. Founding President — Indo Arab Angel Network.
+--   c. Curator — CorporateVentureHub.com, a global platform for sourcing IP,
+--      technologies and startups for corporates.
+--
+-- 5. EDUCATION
+--   a. PhD in Entrepreneurship (to be awarded).
+--   b. Master of Business Administration in Information Technology.
+--   c. Post Graduate Diploma in Computer Application.
+--   d. B.A. (Hons).
+--
+-- 6. OTHER CERTIFICATE COURSES
+--   a. Certificate in Entrepreneurship Development, UC Berkeley, USA.
+--   b. Executive Leadership Development program, IIM Lucknow.
+--   c. Faculty Development Program, NIESBUD, Govt. of India.
+--   d. Open Innovation and Corporate Venturing (Oxymoronic Strategy), IIM Lucknow.
+--   e. Developer Program on Machine Learning, NVIDIA.
 -- =============================================================================
