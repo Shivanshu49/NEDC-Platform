@@ -370,16 +370,18 @@ export default async function EdpLandingPage() {
               {MENTORS.map(({ name, role, credential, photo }) => (
                 <li
                   key={name}
-                  className="flex gap-4 rounded-2xl border border-border bg-card p-5 shadow-soft sm:flex-col"
+                  className="group flex gap-4 rounded-2xl border border-border bg-card p-5 shadow-soft transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/30 hover:shadow-float sm:flex-col"
                 >
-                  <Image
-                    src={photo}
-                    alt={name}
-                    width={160}
-                    height={160}
-                    sizes="(min-width: 640px) 10rem, 5rem"
-                    className="size-20 shrink-0 rounded-2xl object-cover object-top sm:size-28"
-                  />
+                  <div className="size-20 shrink-0 overflow-hidden rounded-2xl sm:size-28">
+                    <Image
+                      src={photo}
+                      alt={name}
+                      width={160}
+                      height={160}
+                      sizes="(min-width: 640px) 10rem, 5rem"
+                      className="size-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-110 motion-reduce:transform-none"
+                    />
+                  </div>
                   <div>
                     <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand">
                       {role}

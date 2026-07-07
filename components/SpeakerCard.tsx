@@ -13,7 +13,7 @@ export function SpeakerCard({ speaker }: { speaker: Speaker }) {
           width={400}
           height={400}
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="aspect-square w-full object-cover"
+          className="aspect-square w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05] motion-reduce:transform-none"
         />
       ) : (
         // Fallback box when no photo is set, so the layout doesn't jump.
