@@ -135,6 +135,13 @@ const MENTORS: { name: string; role: string; credential: string; photo: string }
     photo: "/speakers/ravi-gupta.jpg",
   },
   {
+    name: "S M Rounaque Mustafa",
+    role: "Mentor",
+    credential:
+      "Startup coach, 25+ years. Set up 5 government Technology Business Incubators including IIM Lucknow and DTU, and incubated 1,000+ startups.",
+    photo: "/speakers/s-m-rounaque-mustafa.jpg",
+  },
+  {
     name: "Dr. Bipin Kumar Srivastava",
     role: "Organiser",
     credential:
@@ -359,7 +366,7 @@ export default async function EdpLandingPage() {
               eyebrow="Your mentors"
               title="Learn from people who fund and build businesses"
             />
-            <ul className="mx-auto mt-10 grid max-w-4xl gap-5 sm:grid-cols-3">
+            <ul className="mx-auto mt-10 grid max-w-6xl gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {MENTORS.map(({ name, role, credential, photo }) => (
                 <li
                   key={name}
