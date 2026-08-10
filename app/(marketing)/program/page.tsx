@@ -39,7 +39,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "EDP Program: Register",
   description:
-    "The NEDC Entrepreneurship Development Program (EDP): online & hybrid startup training. What it is, the 5-day curriculum, focus areas, eligibility, benefits, certification, and registration.",
+    "The NEDC Entrepreneurship Development Program (EDP): online & hybrid startup training. What it is, the 6-day curriculum, focus areas, eligibility, benefits, certification, and registration.",
 };
 
 const FOCUS_ICONS: Record<string, LucideIcon> = {
@@ -130,7 +130,7 @@ export default async function ProgramPage() {
           <dl className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: MonitorPlay, k: "Mode", v: "Online / Hybrid" },
-              { icon: CalendarDays, k: "Duration", v: "5 days · 2 sessions/day" },
+              { icon: CalendarDays, k: "Duration", v: "6 days · 10 live sessions" },
               { icon: Award, k: "Certification", v: "Certificate by NEDC" },
               { icon: Users, k: "Open to", v: "Students to rural founders" },
             ].map((f) => (
@@ -218,7 +218,7 @@ export default async function ProgramPage() {
         </Container>
       </section>
 
-      {/* Curriculum — the 5-day plan (from lib/content) */}
+      {/* Curriculum — the 6-day plan (from lib/content) */}
       <Curriculum />
 
       {/* Registration / payment */}

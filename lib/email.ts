@@ -277,7 +277,7 @@ export async function sendEdpRegistrationConfirmationEmail(params: {
   to: string;
   name: string;
   cohortName: string;
-  /** e.g. "27 to 31 July 2026" — omitted from the email when unknown. */
+  /** e.g. "24 to 29 August 2026" — omitted from the email when unknown. */
   dateLabel: string | null;
   amountInr: number; // paise
   razorpayPaymentId: string | null;

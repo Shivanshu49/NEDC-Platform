@@ -87,7 +87,7 @@ export default async function HomePage() {
   const nextCohort = featured ? pickNextCohort(featured.cohorts) : null;
   const cohortDate = nextCohort
     ? formatDateRange(nextCohort.start_date, nextCohort.end_date)
-    : "27 to 31 July 2026";
+    : "24 to 29 August 2026";
   const cohortTime = nextCohort
     ? formatTimeRange(nextCohort.daily_start_time, nextCohort.daily_end_time)
     : null;
@@ -423,7 +423,7 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* ================= CURRICULUM — the 5-day plan ================= */}
+      {/* ================= CURRICULUM — the 6-day plan ================= */}
       <Curriculum />
 
       {/* ================= EDP ADVANCED MASTERCLASS — for existing business owners ================= */}

@@ -112,9 +112,11 @@ export const EDP_OBJECTIVES = [
 ];
 
 /**
- * The 5-day EDP schedule (2 live sessions per day) from the official
- * Schedule_of_EDP_Training_2026. `theme` summarizes the day; `sessions` are the
- * two topics covered, in order.
+ * The 6-day EDP schedule from the official Schedule_of_EDP_Training_2026
+ * session list (August 2026 run). Days 1–4 hold two live sessions each; the
+ * project-report day and the feedback/valedictory close each get a focused
+ * day of their own. `theme` summarizes the day; `sessions` are the topics
+ * covered, in order.
  */
 export const EDP_CURRICULUM = [
   {
@@ -151,17 +153,21 @@ export const EDP_CURRICULUM = [
   },
   {
     day: 5,
-    theme: "Project report & validation",
+    theme: "Project report & viability",
     sessions: [
       "Writing a Project Report: break-even point (BEP) and ratios for economic viability",
-      "Feedback & valedictory session",
     ],
+  },
+  {
+    day: 6,
+    theme: "Feedback & valedictory",
+    sessions: ["Feedback & valedictory session"],
   },
 ] as const;
 
 /** Footnote shown under the curriculum. */
 export const EDP_SCHEDULE_NOTE =
-  "Each session is a one-hour live online lecture, with a 15-minute break after the first session.";
+  "Each session is a one-hour live online lecture; days with two sessions include a 15-minute break between them.";
 
 /**
  * The EDP Advanced Masterclass — our advanced course program for people who
@@ -204,7 +210,7 @@ export const MASTERCLASS = {
   ],
   ctaLabel: "Register for the Masterclass",
   footnote:
-    "Built on the NEDC EDP. New to business? Start with the foundation 5-day program first.",
+    "Built on the NEDC EDP. New to business? Start with the foundation 6-day program first.",
 } as const;
 
 /**

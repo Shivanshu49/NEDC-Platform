@@ -21,11 +21,11 @@ export default async function EdpLayout({
 }) {
   const featured = await getFeaturedProgram();
   const nextCohort = featured ? pickNextCohort(featured.cohorts) : null;
-  // The campaign promises 27 July; fall back to the campaign date if the DB is
-  // unreachable so the page never contradicts the ad.
+  // The campaign promises 24 August; fall back to the campaign date if the DB
+  // is unreachable so the page never contradicts the ad.
   const startLabel = nextCohort
     ? formatDate(nextCohort.start_date)
-    : "27 July 2026";
+    : "24 August 2026";
   const year = new Date().getFullYear();
 
   const whatsappHref = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(

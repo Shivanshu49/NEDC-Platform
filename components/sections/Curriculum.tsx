@@ -6,7 +6,7 @@ import { OffsetCard } from "@/components/OffsetCard";
 import { EDP_CURRICULUM, EDP_SCHEDULE_NOTE } from "@/lib/content";
 
 /**
- * The 5-day EDP curriculum (2 live sessions per day), from the official
+ * The 6-day EDP curriculum, from the official
  * Schedule_of_EDP_Training_2026. Content lives in lib/content.ts (EDP_CURRICULUM)
  * so the home landing and the /program page render the same source of truth.
  */
@@ -20,7 +20,7 @@ export function Curriculum() {
         <SectionHeading
           center
           eyebrow="Curriculum"
-          title="Your 5-day plan, session by session"
+          title="Your 6-day plan, session by session"
           subtitle="Two focused live sessions each day, from the entrepreneurial mindset to a finished, fundable project report."
         />
 

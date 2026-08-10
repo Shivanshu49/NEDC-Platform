@@ -41,7 +41,7 @@ export function AboutProgram() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button href="#curriculum" variant="primary" className="group">
-                See the 5-day plan
+                See the 6-day plan
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
               </Button>
               <Button href="#register" variant="secondary">

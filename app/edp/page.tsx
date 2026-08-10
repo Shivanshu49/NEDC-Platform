@@ -77,9 +77,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const nextCohort = featured ? pickNextCohort(featured.cohorts) : null;
   const startLabel = nextCohort
     ? formatDate(nextCohort.start_date)
-    : "27 July 2026";
-  const title = "5-Day Entrepreneurship Development Program (EDP)";
-  const description = `Stop searching for a job. Learn to create one. NEDC's 5-day mentor-led EDP, live online, with government scheme guidance and a Certificate of Completion. Cohort starts ${startLabel}.`;
+    : "24 August 2026";
+  const title = "6-Day Entrepreneurship Development Program (EDP)";
+  const description = `Stop searching for a job. Learn to create one. NEDC's 6-day mentor-led EDP, live online, with government scheme guidance and a Certificate of Completion. Cohort starts ${startLabel}.`;
   return {
     title,
     description,
@@ -103,7 +103,7 @@ const GRAIN =
 const WHAT_YOU_GET: { Icon: LucideIcon; accent?: boolean; title: string; body: string }[] = [
   {
     Icon: Video,
-    title: "Live mentor-led sessions, all 5 days",
+    title: "Live mentor-led sessions, all 6 days",
     body: "Learn directly from mentors in live online sessions, with every session recorded for you to rewatch.",
   },
   {
@@ -170,12 +170,12 @@ export default async function EdpLandingPage() {
   const nextCohort = featured ? pickNextCohort(featured.cohorts) : null;
   const regState = registrationState(nextCohort);
   const registrationOpen = regState === "open";
-  // The campaign promises 27 July; fall back to the campaign dates if the DB
+  // The campaign promises 24 August; fall back to the campaign dates if the DB
   // is unreachable so the page never contradicts the ad.
   const dateLabel = nextCohort
     ? formatDateRange(nextCohort.start_date, nextCohort.end_date)
-    : "27 to 31 July 2026";
-  const startLabel = nextCohort ? formatDate(nextCohort.start_date) : "27 July 2026";
+    : "24 to 29 August 2026";
+  const startLabel = nextCohort ? formatDate(nextCohort.start_date) : "24 August 2026";
   const timeLabel = nextCohort
     ? formatTimeRange(nextCohort.daily_start_time, nextCohort.daily_end_time)
     : "6:30 PM to 8:30 PM";
@@ -189,7 +189,7 @@ export default async function EdpLandingPage() {
     {
       Icon: CalendarDays,
       title: "Advance Certificate Course",
-      body: `5-day live EDP · ${dateLabel}`,
+      body: `6-day live EDP · ${dateLabel}`,
     },
     {
       Icon: Wifi,
@@ -268,7 +268,7 @@ export default async function EdpLandingPage() {
                 </h1>
 
                 <p className="mt-3 max-w-xl text-pretty leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
-                  NEDC&apos;s 5-day Entrepreneurship Development Program: live,
+                  NEDC&apos;s 6-day Entrepreneurship Development Program: live,
                   mentor-led online sessions that take you from idea to a real
                   business plan.
                 </p>
@@ -342,7 +342,7 @@ export default async function EdpLandingPage() {
             <SectionHeading
               center
               eyebrow="What you get"
-              title="Five days that change how you think about work"
+              title="Six days that change how you think about work"
             />
             <ul className="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-2">
               {WHAT_YOU_GET.map(({ Icon, accent, title, body }) => (
@@ -372,12 +372,12 @@ export default async function EdpLandingPage() {
           </Container>
         </section>
 
-        {/* ================= 3. THE 5-DAY PLAN (titles only) ================= */}
+        {/* ================= 3. THE 6-DAY PLAN (titles only) ================= */}
         <section className="py-14 sm:py-20">
           <Container>
             <SectionHeading
               center
-              eyebrow="The 5-day plan"
+              eyebrow="The 6-day plan"
               title="One focused week, day by day"
             />
             <ol className="mx-auto mt-10 max-w-2xl overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
@@ -404,7 +404,7 @@ export default async function EdpLandingPage() {
               ))}
             </ol>
             <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-muted-foreground">
-              Two live one-hour sessions each day, held online
+              Live one-hour sessions each day, held online
               {timeLabel ? `, ${timeLabel} IST` : ""}. {dateLabel}.
             </p>
           </Container>
@@ -540,7 +540,7 @@ export default async function EdpLandingPage() {
               />
               <div className="relative">
                 <h2 className="font-display text-balance text-fluid-h2 font-bold tracking-tight">
-                  Your business idea deserves 5 days.
+                  Your business idea deserves 6 days.
                 </h2>
                 <p className="mx-auto mt-4 max-w-xl text-pretty text-primary-foreground/80">
                   Join the cohort starting {startLabel}. Live mentor-led
