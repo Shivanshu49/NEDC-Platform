@@ -84,3 +84,27 @@ export type Faq = {
   sort_order: number;
   is_published: boolean;
 };
+
+/**
+ * One /edp landing-page registration: the lead (name/email/phone/message) plus
+ * its Razorpay order/payment state. Mirrors 0010_edp_registrations.sql.
+ * Written only by server code (service role); staff read it in the Table Editor.
+ */
+export type EdpRegistration = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string | null;
+  cohort_id: string | null;
+  amount_inr: number | null; // PAISE, server-set from cohorts.price_inr
+  currency: string;
+  razorpay_order_id: string | null;
+  razorpay_payment_id: string | null;
+  payment_status: "pending" | "paid" | "failed";
+  status: string;
+  enquiry_email_sent_at: string | null;
+  confirmation_email_sent_at: string | null;
+  created_at: string;
+  updated_at: string;
+};

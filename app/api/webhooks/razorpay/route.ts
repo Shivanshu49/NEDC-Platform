@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/lib/razorpay";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { markEdpRegistrationPaid } from "@/lib/edp";
 import { sendEnrollmentEmail } from "@/lib/email";
 import { sendEnrollmentSms } from "@/lib/sms";
 import { logEvent } from "@/lib/log";
@@ -46,6 +47,13 @@ export async function POST(request: Request) {
         .update({ status: "failed", razorpay_payment_id: payment?.id })
         .eq("razorpay_order_id", orderId)
         .eq("status", "created");
+      // Guest /edp funnel: keep the lead, just record the failed attempt so
+      // staff can follow up (the form also lets the visitor retry in place).
+      await admin
+        .from("edp_registrations")
+        .update({ payment_status: "failed", razorpay_payment_id: payment?.id })
+        .eq("razorpay_order_id", orderId)
+        .eq("payment_status", "pending");
     }
     return NextResponse.json({ received: true });
   }
@@ -62,7 +70,29 @@ export async function POST(request: Request) {
     .select("*")
     .eq("razorpay_order_id", orderId)
     .maybeSingle();
-  if (!pay) return NextResponse.json({ received: true }); // unknown order — ignore
+  if (!pay) {
+    // Not a logged-in checkout order — maybe a guest /edp registration. This
+    // webhook is the fallback confirmation when the browser never returned
+    // from Razorpay (tab closed, network drop). markEdpRegistrationPaid is
+    // idempotent and FAILS CLOSED unless the captured amount and currency
+    // exactly match what we stamped on the lead at order creation.
+    const currencyOk =
+      typeof payment.currency !== "string" || payment.currency === "INR";
+    const capturedAmount =
+      currencyOk && typeof payment.amount === "number" ? payment.amount : -1;
+    const { registration } = await markEdpRegistrationPaid(admin, {
+      orderId,
+      paymentId: payment.id ?? null,
+      amountPaise: capturedAmount,
+    });
+    if (registration) {
+      logEvent("info", "razorpay_webhook.edp_paid", {
+        registrationId: registration.id,
+        orderId,
+      });
+    }
+    return NextResponse.json({ received: true }); // unknown orders are ignored
+  }
 
   // A terminal payment must never be reprocessed. This blocks a stale
   // payment.captured retry (Razorpay can redeliver much later) from flipping a

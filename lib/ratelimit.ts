@@ -36,6 +36,10 @@ const LIMITERS = {
   recordingToken: makeLimiter(60, "1 m"),
   // Public contact form — blunt spam/flooding.
   contact: makeLimiter(5, "10 m"),
+  // /edp registration form — creates a lead + Razorpay order + sends an
+  // enquiry email. Slightly looser than `contact` because legitimate payment
+  // retries re-POST here (they reuse the same lead/order, but still count).
+  edpRegister: makeLimiter(8, "10 m"),
   // Profile self-edits — generous; just blunts scripted write spam.
   profile: makeLimiter(20, "1 m"),
   // Post-login onboarding submit/skip — generous; one-time flow.

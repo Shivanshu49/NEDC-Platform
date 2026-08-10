@@ -32,6 +32,65 @@ export const verifyPaymentBody = z.object({
 });
 
 /**
+ * Normalize an Indian mobile number to its bare 10 digits, or null if it isn't
+ * one. Accepts the ways people actually type it — spaces/dashes/parens, a +91 /
+ * 91 country code, or a leading 0 — then requires exactly 10 digits starting
+ * 6–9 (the Indian mobile range). Pure (no env/server deps) so the /edp form can
+ * validate client-side with the SAME rule the route handler enforces.
+ */
+export function normalizeIndianPhone(value: string): string | null {
+  let digits = value.replace(/\D/g, "");
+  if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
+  else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
+  return /^[6-9]\d{9}$/.test(digits) ? digits : null;
+}
+
+/**
+ * The /edp hero registration form fields — shared by the client form
+ * (react-hook-form resolver) and the /api/edp/register route so both sides
+ * validate identically. Phone is validated (not transformed) here so the
+ * client's field value round-trips unchanged; the server normalizes it with
+ * normalizeIndianPhone() before storing.
+ */
+export const edpRegistrationFields = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Please enter your full name.")
+    .max(120, "Name is too long (max 120 characters)."),
+  email: z
+    .email("Please enter a valid email address.")
+    .max(200, "Email is too long (max 200 characters)."),
+  phone: z
+    .string()
+    .trim()
+    .refine(
+      (v) => normalizeIndianPhone(v) !== null,
+      "Enter a valid 10-digit Indian mobile number.",
+    ),
+  message: z
+    .string()
+    .trim()
+    .max(1000, "Message is too long (max 1000 characters).")
+    .optional()
+    .or(z.literal("")),
+});
+
+export type EdpRegistrationFields = z.infer<typeof edpRegistrationFields>;
+
+/**
+ * POST /api/edp/register body. On a retry (payment dismissed/failed) the client
+ * resends with `registrationId` so the SAME lead row is updated and the open
+ * Razorpay order is reused — no duplicate leads, no duplicate enquiry emails.
+ * `website` is a honeypot: humans never see it, bots fill it → reject early.
+ */
+export const edpRegisterBody = edpRegistrationFields.extend({
+  cohortId: z.uuid().optional(),
+  registrationId: z.uuid().optional(),
+  website: z.string().max(0).optional(),
+});
+
+/**
  * A profile photo URL. We only ever persist a URL that points at OUR OWN public
  * `avatars` Storage bucket — never an arbitrary client-supplied string (which
  * could be an off-site tracking pixel or a `javascript:`/`data:` payload). The

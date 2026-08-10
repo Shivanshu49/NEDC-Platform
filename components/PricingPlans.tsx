@@ -3,6 +3,7 @@ import { Check, Clock } from "lucide-react";
 import { Button } from "@/components/Button";
 import { EnrollButton } from "@/components/EnrollButton";
 import { OffsetCard } from "@/components/OffsetCard";
+import { ScrollToFormLink } from "@/components/edp/ScrollToFormLink";
 import { PLANS } from "@/lib/plans";
 import { formatINR } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -29,6 +30,11 @@ export interface PricingPlansProps {
    * or ended without `enroll_open`) — flips the fallback CTA from "opening
    * soon" to "closed". Derive via lib/queries → registrationState(). */
   registrationClosed?: boolean;
+  /** /edp only: instead of opening Razorpay directly, the CTA smooth-scrolls
+   * to the inline hero registration form with this element id (#register) and
+   * focuses its first field. Default (undefined) keeps the normal
+   * EnrollButton checkout, so the homepage & co. are untouched. */
+  enrollScrollTargetId?: string;
 }
 
 export function PricingPlans({
@@ -38,6 +44,7 @@ export function PricingPlans({
   cohortId,
   cohortName,
   registrationClosed = false,
+  enrollScrollTargetId,
 }: PricingPlansProps) {
   const registrationOpen = Boolean(cohortId && cohortName);
   const plan = PLANS[0];
@@ -114,14 +121,25 @@ export function PricingPlans({
         {/* CTA — pinned to the bottom */}
         <div className="mt-auto pt-7">
           {canEnroll ? (
-            <EnrollButton
-              cohortId={cohortId!}
-              cohortName={cohortName!}
-              plan={plan.id}
-              label={plan.ctaLabel}
-              variant={plan.highlight ? "brand" : "secondary"}
-              className="w-full"
-            />
+            enrollScrollTargetId ? (
+              <ScrollToFormLink
+                targetId={enrollScrollTargetId}
+                variant={plan.highlight ? "brand" : "outline"}
+                size="lg"
+                className="w-full rounded-full"
+              >
+                {plan.ctaLabel}
+              </ScrollToFormLink>
+            ) : (
+              <EnrollButton
+                cohortId={cohortId!}
+                cohortName={cohortName!}
+                plan={plan.id}
+                label={plan.ctaLabel}
+                variant={plan.highlight ? "brand" : "secondary"}
+                className="w-full"
+              />
+            )
           ) : (
             <Button
               href="#register"

@@ -14,13 +14,12 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
-import { Logo } from "@/components/Logo";
 import { PricingPlans } from "@/components/PricingPlans";
 import { SectionHeading } from "@/components/SectionHeading";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { WhatsappIcon } from "@/components/BrandIcons";
+import { EdpFloatingCtas } from "@/components/edp/EdpFloatingCtas";
+import { EdpRegistrationForm } from "@/components/edp/EdpRegistrationForm";
+import { ScrollToFormLink } from "@/components/edp/ScrollToFormLink";
 import { Certification } from "@/components/sections/Certification";
 import { FAQS } from "@/components/sections/FaqSection";
 import {
@@ -30,8 +29,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { EDP_CURRICULUM, CONTACT } from "@/lib/content";
-import { formatDate, formatDateRange, formatTimeRange } from "@/lib/format";
+import { EDP_CURRICULUM } from "@/lib/content";
+import {
+  formatDate,
+  formatDateRange,
+  formatINR,
+  formatTimeRange,
+} from "@/lib/format";
 import {
   getFeaturedProgram,
   pickNextCohort,
@@ -44,18 +48,21 @@ import {
  * When the sitewide pixel is added (separate work), it must also:
  *   1. fire PageView on this page,
  *   2. track the WhatsApp CTA clicks (the floating WhatsAppButton and the
- *      footer WhatsApp link below), and
- *   3. track Razorpay checkout start inside EnrollButton's handleEnroll
- *      (e.g. InitiateCheckout), matching the event-naming convention the
- *      pixel setup uses elsewhere.
+ *      footer WhatsApp link in app/edp/layout.tsx), and
+ *   3. track checkout start inside EdpRegistrationForm's submit handler
+ *      (e.g. Lead on /api/edp/register success + InitiateCheckout when the
+ *      Razorpay modal opens), matching the event-naming convention the pixel
+ *      setup uses elsewhere.
  */
 
 /**
  * /edp — stripped-down landing page for PAID ad traffic (Meta "Sales"
- * campaign). One job: convert. No site nav, no scheme widget, no outbound
- * links, minimal footer. Lives OUTSIDE the (marketing) route group so it does
- * not inherit the Navbar/Footer chrome. Reuses the site's tokens, components,
- * and the real Razorpay checkout (PricingPlans → EnrollButton → /api/checkout).
+ * campaign). One job: convert. Registration + payment is ONE continuous flow
+ * that starts in the hero: a split layout with the pitch on the left and the
+ * registration form on the right (form first on mobile). Submitting saves the
+ * lead, emails the team, and opens Razorpay in place; success verifies the
+ * signature server-side and lands on /edp/thank-you. No site nav, no scheme
+ * widget, no outbound links, minimal footer (chrome lives in app/edp/layout).
  */
 
 export const revalidate = 300;
@@ -172,29 +179,48 @@ export default async function EdpLandingPage() {
   const timeLabel = nextCohort
     ? formatTimeRange(nextCohort.daily_start_time, nextCohort.daily_end_time)
     : "6:30 PM to 8:30 PM";
+  const priceInr = nextCohort?.price_inr;
+  const priceLabel =
+    typeof priceInr === "number" && priceInr > 0 ? formatINR(priceInr) : undefined;
   const faqs = FAQS.filter((f) => FAQ_QUESTIONS.has(f.question));
-  const year = new Date().getFullYear();
 
-  const whatsappHref = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(
-    "Hi NEDC, I'd like to know more about the EDP program.",
-  )}`;
+  // The 3–4 short hero bullets: program, mode, certification, mentorship.
+  const heroBenefits: { Icon: LucideIcon; accent?: boolean; title: string; body: string }[] = [
+    {
+      Icon: CalendarDays,
+      title: "Advance Certificate Course",
+      body: `5-day live EDP · ${dateLabel}`,
+    },
+    {
+      Icon: Wifi,
+      title: "100% online, hybrid-friendly",
+      body: `Live sessions${timeLabel ? `, ${timeLabel} IST` : ""}, recorded to rewatch`,
+    },
+    {
+      Icon: BadgeCheck,
+      accent: true,
+      title: "Certificate of Completion",
+      body: "Issued by NEDC — share it on LinkedIn",
+    },
+    {
+      Icon: Users,
+      title: "1-on-1 mentorship",
+      body: "Personal guidance and doubt-clearing sessions",
+    },
+  ];
 
   return (
     <>
-      {/* ---------- Minimal header: logo → home, nothing else to leak to ---------- */}
-      <header className="border-b border-border bg-background">
-        <Container className="flex h-16 items-center justify-between">
-          <Logo withWordmark href="/" className="h-9 w-auto" wordmarkClassName="text-lg" />
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground sm:text-sm">
-            <CalendarDays className="size-4 text-primary" aria-hidden />
-            Starts <span className="font-semibold text-primary">{startLabel}</span>
-          </span>
-        </Container>
-      </header>
-
       <main>
-        {/* ================= 1. HERO ================= */}
-        <section className="relative overflow-hidden bg-background">
+        {/* ============ 1. HERO — pitch left, registration form right ============
+            The section itself is the #register anchor every enroll CTA (pricing
+            card, final CTA, sticky button) smooth-scrolls back to. On mobile the
+            order is: short heading → FORM → benefit bullets, so the form is
+            reachable immediately without scrolling through the pitch. */}
+        <section
+          id="register"
+          className="relative scroll-mt-4 overflow-hidden border-b border-border bg-background"
+        >
           <div
             aria-hidden
             className="bg-dot-grid mask-fade-edges pointer-events-none absolute inset-0 opacity-60"
@@ -204,82 +230,108 @@ export default async function EdpLandingPage() {
             className="pointer-events-none absolute -right-32 -top-24 size-[26rem] rounded-full bg-panel blur-3xl"
           />
 
-          <Container className="relative py-14 sm:py-20">
-            <div className="mx-auto max-w-2xl text-center">
-              <Badge
-                variant="default"
-                className="border border-primary/15 px-3 py-1 text-[13px] font-semibold"
-              >
-                <span className="relative flex size-2" aria-hidden>
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand opacity-70 motion-reduce:hidden" />
-                  <span className="relative inline-flex size-2 rounded-full bg-brand" />
-                </span>
-                {REGISTRATION_BADGE[regState]}
-              </Badge>
-
-              <h1 className="font-display mt-6 text-balance text-hero font-extrabold leading-[1.05] tracking-tight text-primary">
-                Stop searching for a job. Learn to{" "}
-                <span className="relative inline-block whitespace-nowrap">
-                  create one.
-                  {/* the site's signature hand-drawn maroon underline */}
-                  <svg
-                    aria-hidden
-                    viewBox="0 0 200 14"
-                    preserveAspectRatio="none"
-                    className="absolute -bottom-1.5 left-0 h-[0.35em] w-full text-brand/45"
-                  >
-                    <path
-                      d="M3 9 C 55 3, 140 3, 197 7"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </span>
-              </h1>
-
-              <p className="mt-6 text-pretty text-lg leading-relaxed text-muted-foreground">
-                NEDC&apos;s 5-day Entrepreneurship Development Program: live,
-                mentor-led online sessions that take you from idea to a real
-                business plan, with a Certificate of Completion by NEDC.
-              </p>
-
-              <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-                <Button
-                  href="#register"
-                  variant="primary"
-                  size="lg"
-                  className="group w-full shadow-soft hover:-translate-y-0.5 sm:w-auto"
+          <Container className="relative py-8 sm:py-12 lg:py-16">
+            <div className="grid gap-x-12 gap-y-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,27rem)] xl:gap-x-16">
+              {/* Headline block */}
+              <div className="lg:col-start-1 lg:row-start-1 lg:pt-2">
+                <Badge
+                  variant="default"
+                  className="border border-primary/15 px-3 py-1 text-[13px] font-semibold"
                 >
-                  Enroll now
-                  <ArrowRight
-                    className="size-4 transition-transform group-hover:translate-x-0.5"
-                    aria-hidden
-                  />
-                </Button>
-              </div>
-              <p className="mt-4 text-sm font-medium text-brand">
-                Starts {startLabel} · Limited seats per cohort
-              </p>
+                  <span className="relative flex size-2" aria-hidden>
+                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand opacity-70 motion-reduce:hidden" />
+                    <span className="relative inline-flex size-2 rounded-full bg-brand" />
+                  </span>
+                  {REGISTRATION_BADGE[regState]}
+                </Badge>
 
-              {/* trust strip */}
-              <ul className="mt-9 flex flex-wrap justify-center gap-x-5 gap-y-3 border-t border-border pt-6">
-                {[
-                  { label: "5-day program", Icon: CalendarDays },
-                  { label: "100% Online / Hybrid", Icon: Wifi },
-                  { label: "Mentor-led", Icon: Users },
-                  { label: "Certificate by NEDC", Icon: BadgeCheck },
-                ].map(({ label, Icon }) => (
-                  <li
-                    key={label}
-                    className="inline-flex items-center gap-2 text-sm font-medium text-foreground"
-                  >
-                    <Icon className="size-4 shrink-0 text-primary" aria-hidden />
-                    {label}
-                  </li>
-                ))}
-              </ul>
+                <h1 className="font-display mt-4 text-balance text-3xl font-extrabold leading-[1.08] tracking-tight text-primary sm:mt-6 sm:text-5xl xl:text-6xl">
+                  Stop searching for a job. Learn to{" "}
+                  <span className="relative inline-block whitespace-nowrap">
+                    create one.
+                    {/* the site's signature hand-drawn maroon underline */}
+                    <svg
+                      aria-hidden
+                      viewBox="0 0 200 14"
+                      preserveAspectRatio="none"
+                      className="absolute -bottom-1.5 left-0 h-[0.35em] w-full text-brand/45"
+                    >
+                      <path
+                        d="M3 9 C 55 3, 140 3, 197 7"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </span>
+                </h1>
+
+                <p className="mt-3 max-w-xl text-pretty leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
+                  NEDC&apos;s 5-day Entrepreneurship Development Program: live,
+                  mentor-led online sessions that take you from idea to a real
+                  business plan.
+                </p>
+                <p className="mt-3 text-sm font-medium text-brand">
+                  Starts {startLabel} · Limited seats per cohort
+                </p>
+              </div>
+
+              {/* Registration form — the whole flow starts (and retries) here. */}
+              <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+                <EdpRegistrationForm
+                  cohortId={registrationOpen ? nextCohort!.id : undefined}
+                  priceLabel={priceLabel}
+                  startLabel={startLabel}
+                  registrationOpen={registrationOpen}
+                />
+              </div>
+
+              {/* Benefit bullets + mentor credibility (below the form on mobile) */}
+              <div className="lg:col-start-1 lg:row-start-2 lg:self-end">
+                <ul className="grid gap-3 sm:grid-cols-2">
+                  {heroBenefits.map(({ Icon, accent, title, body }) => (
+                    <li key={title} className="flex items-start gap-3">
+                      <span
+                        aria-hidden
+                        className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${
+                          accent ? "bg-brand/10 text-brand" : "bg-primary/10 text-primary"
+                        }`}
+                      >
+                        <Icon className="size-[18px]" />
+                      </span>
+                      <div>
+                        <p className="text-sm font-semibold leading-snug text-foreground">
+                          {title}
+                        </p>
+                        <p className="mt-0.5 text-pretty text-xs leading-relaxed text-muted-foreground">
+                          {body}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-6 flex items-center gap-3 border-t border-border pt-5">
+                  <div className="flex -space-x-2" aria-hidden>
+                    {MENTORS.map(({ name, photo }) => (
+                      <Image
+                        key={name}
+                        src={photo}
+                        alt=""
+                        width={64}
+                        height={64}
+                        sizes="2.25rem"
+                        className="size-9 rounded-full border-2 border-background object-cover object-top"
+                      />
+                    ))}
+                  </div>
+                  <p className="text-xs font-medium leading-snug text-muted-foreground">
+                    Mentored by ex-bankers, incubation heads &amp; MSME
+                    strategists
+                  </p>
+                </div>
+              </div>
             </div>
           </Container>
         </section>
@@ -399,8 +451,8 @@ export default async function EdpLandingPage() {
           </Container>
         </section>
 
-        {/* ================= 5. PRICING (real Razorpay checkout) ================= */}
-        <section id="register" className="scroll-mt-24 py-14 sm:py-20">
+        {/* ====== 5. PRICING — the CTA scrolls back UP to the hero form ====== */}
+        <section id="pricing" className="scroll-mt-24 py-14 sm:py-20">
           <Container>
             <SectionHeading
               center
@@ -418,6 +470,7 @@ export default async function EdpLandingPage() {
                 cohortId={registrationOpen ? nextCohort!.id : undefined}
                 cohortName={registrationOpen ? nextCohort!.name : undefined}
                 registrationClosed={regState === "closed"}
+                enrollScrollTargetId="register"
               />
             </div>
 
@@ -495,15 +548,13 @@ export default async function EdpLandingPage() {
                   show for it.
                 </p>
                 <div className="mt-8 flex justify-center">
-                  <Button
-                    href="#register"
-                    variant="primary"
+                  <ScrollToFormLink
                     size="lg"
                     className="bg-card text-primary shadow-xl shadow-primary/25 hover:-translate-y-0.5 hover:bg-card/90"
                   >
                     Enroll now
                     <ArrowRight className="size-4" aria-hidden />
-                  </Button>
+                  </ScrollToFormLink>
                 </div>
                 <p className="mt-4 text-sm font-medium text-primary-foreground/80">
                   Limited seats per cohort
@@ -514,42 +565,9 @@ export default async function EdpLandingPage() {
         </section>
       </main>
 
-      {/* ---------- Minimal footer: legal + WhatsApp only ---------- */}
-      <footer className="border-t border-border bg-panel/40 py-8">
-        <Container className="flex flex-col items-center gap-4 text-center text-sm text-muted-foreground">
-          <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-            {[
-              { href: "/terms", label: "Terms & Conditions" },
-              { href: "/privacy", label: "Privacy Policy" },
-              { href: "/refund", label: "Refund & Cancellation" },
-            ].map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="transition-colors hover:text-primary"
-              >
-                {l.label}
-              </Link>
-            ))}
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-medium text-foreground transition-colors hover:text-primary"
-            >
-              <WhatsappIcon className="size-4 text-[#25D366]" aria-hidden />
-              WhatsApp {CONTACT.phone}
-            </a>
-          </nav>
-          <p>
-            © {year} NEDC, National Entrepreneurship Development Center. All
-            rights reserved.
-          </p>
-        </Container>
-      </footer>
-
-      {/* Persistent secondary CTA — the site's floating WhatsApp chat button. */}
-      <WhatsAppButton />
+      {/* Floating CTAs: WhatsApp chat + the sticky "Enroll Now" that appears
+          past the hero and scrolls back to the form (never overlapping). */}
+      <EdpFloatingCtas priceLabel={priceLabel} targetId="register" />
     </>
   );
 }
