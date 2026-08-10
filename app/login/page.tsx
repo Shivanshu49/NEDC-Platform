@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ShieldCheck, Zap, PlayCircle } from "lucide-react";
 import { LoginForm } from "@/components/LoginForm";
+import { Logo } from "@/components/Logo";
 import { OffsetCard } from "@/components/OffsetCard";
 
 export const metadata: Metadata = {
@@ -38,12 +38,14 @@ export default async function LoginPage({
       <div className="mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-center gap-10 px-6 py-16 lg:flex-row lg:gap-16">
         {/* Left: brand + value props (hidden on small screens) */}
         <div className="hidden max-w-sm flex-1 lg:block">
-          <Link
-            href="/"
-            className="font-display text-2xl font-bold tracking-tight text-foreground"
-          >
-            N<span className="text-primary">ED</span>C
-          </Link>
+          {/* NEDC brand lockup — emblem + wordmark, same as the landing hero */}
+          <Logo
+            withWordmark
+            subtitle
+            priority
+            className="h-14 w-auto"
+            wordmarkClassName="text-2xl"
+          />
           <h1 className="mt-6 font-display text-3xl font-bold leading-tight tracking-tight text-foreground">
             Welcome back to your founder journey.
           </h1>
@@ -67,12 +69,15 @@ export default async function LoginPage({
         {/* Right: the auth card */}
         <div className="w-full max-w-md flex-1">
           {/* Mobile-only logo */}
-          <Link
-            href="/"
-            className="mb-6 block text-center font-display text-xl font-bold tracking-tight text-foreground lg:hidden"
-          >
-            N<span className="text-primary">ED</span>C
-          </Link>
+          <div className="mb-6 flex justify-center lg:hidden">
+            <Logo
+              withWordmark
+              subtitle
+              priority
+              className="h-10 w-auto"
+              wordmarkClassName="text-xl"
+            />
+          </div>
           <OffsetCard>
             <div className="p-8">
               <h2 className="font-display text-2xl font-bold tracking-tight text-foreground">
