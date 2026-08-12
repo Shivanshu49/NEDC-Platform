@@ -10,9 +10,9 @@ import { getFeaturedProgram, pickNextCohort } from "@/lib/queries";
 
 /**
  * Shared chrome for the /edp funnel (landing page + /edp/thank-you): a
- * deliberately MINIMAL header (logo + start date, nothing to leak paid traffic
- * to) and a legal-links footer. Lives outside the (marketing) route group so
- * none of the site nav appears here.
+ * deliberately MINIMAL header (an UNLINKED logo + the start date, so ad traffic
+ * has nowhere to click away to) and a legal-links footer. Lives outside the
+ * (marketing) route group so none of the site nav appears here.
  */
 export default async function EdpLayout({
   children,
@@ -34,12 +34,14 @@ export default async function EdpLayout({
 
   return (
     <>
-      {/* ---------- Minimal header: logo → home, nothing else to leak to ---------- */}
+      {/* ---------- Minimal header: logo (not a link) + start date, nothing else ---------- */}
       <header className="border-b border-border bg-background">
         <Container className="flex h-16 items-center justify-between">
+          {/* Not linked: on the campaign page the logo is branding only, so a
+              tap cannot bounce paid traffic to the main site. */}
           <Logo
             withWordmark
-            href="/"
+            linked={false}
             className="h-9 w-auto"
             wordmarkClassName="text-lg"
           />
