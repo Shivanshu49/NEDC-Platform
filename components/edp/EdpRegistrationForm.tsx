@@ -72,6 +72,9 @@ export function EdpRegistrationForm({
   const [leadSaved, setLeadSaved] = useState(false);
   // Set after the first successful save; retries update the SAME lead + order.
   const [registrationId, setRegistrationId] = useState<string | null>(null);
+  // Meta Pixel: one Lead per lead row — payment retries resubmit the same
+  // lead, so they must not report a second Lead.
+  const leadFiredRef = useRef(false);
   const honeypotRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<EdpRegistrationFields>({
@@ -109,6 +112,12 @@ export function EdpRegistrationForm({
         return;
       }
       setRegistrationId(data.registrationId);
+      // Validation passed and the lead row is saved server-side — report the
+      // conversion (covers both the lead-only and the pay-now paths).
+      if (!leadFiredRef.current) {
+        leadFiredRef.current = true;
+        window.fbq?.("track", "Lead");
+      }
       if (data.leadOnly) {
         setLeadSaved(true);
         setPhase("idle");

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import MetaPixel from "@/components/MetaPixel";
 import {
   getFeaturedProgram,
   pickNextCohort,
@@ -88,6 +89,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${inter.variable} ${jakarta.variable} ${geistMono.variable} antialiased`}
       >
+        <MetaPixel />
         {children}
       </body>
     </html>

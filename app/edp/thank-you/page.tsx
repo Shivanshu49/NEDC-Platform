@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { OffsetCard } from "@/components/OffsetCard";
+import { PurchasePixel } from "@/components/edp/PurchasePixel";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { WhatsappIcon } from "@/components/BrandIcons";
 import { CONTACT } from "@/lib/content";
@@ -109,6 +110,14 @@ export default async function EdpThankYouPage({
 
   return (
     <>
+      {/* Meta Pixel Purchase — only for a confirmed-paid ref (never pending or
+          unknown); the component itself guarantees once-per-payment. */}
+      {registration && paid && typeof registration.amount_inr === "number" && (
+        <PurchasePixel
+          registrationId={registration.id}
+          amountPaise={registration.amount_inr}
+        />
+      )}
       <main className="relative overflow-hidden bg-background">
         <div
           aria-hidden
