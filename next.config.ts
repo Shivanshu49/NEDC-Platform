@@ -19,10 +19,11 @@ const isDev = process.env.NODE_ENV !== "production";
 
 const csp = [
   "default-src 'self'",
-  // Razorpay Checkout widget (checkout.razorpay.com), Meta Pixel (fbevents.js
-  // from connect.facebook.net), Google tag / GTM + GA (gtag.js, analytics.js).
+  // Razorpay Checkout widget (checkout.razorpay.com) plus the risk-detection
+  // bundle it pulls in (cdn.razorpay.com), Meta Pixel (fbevents.js from
+  // connect.facebook.net), Google tag / GTM + GA (gtag.js, analytics.js).
   // 'unsafe-eval' is added in dev only (Turbopack HMR needs it).
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://checkout.razorpay.com https://connect.facebook.net https://www.googletagmanager.com https://www.google-analytics.com`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://checkout.razorpay.com https://cdn.razorpay.com https://connect.facebook.net https://www.googletagmanager.com https://www.google-analytics.com`,
   "style-src 'self' 'unsafe-inline'",
   // Images: our hosts + Mux posters + YouTube thumbnails + the placeholder
   // providers in remotePatterns + the Meta/Google tracking beacons (incl. the
