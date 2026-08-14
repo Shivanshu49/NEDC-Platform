@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MetaPixel from "@/components/MetaPixel";
+import { META_PIXEL_ID, META_PIXEL_SNIPPET } from "@/lib/meta-pixel";
 import {
   getFeaturedProgram,
   pickNextCohort,
@@ -85,6 +86,24 @@ export default function RootLayout({
     // suppressHydrationWarning: only <body> attributes can differ here (browser
     // extensions, dev font-class re-hashing) — both benign, both one level deep.
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Official Meta Pixel — must be in the first HTML <head>, not a
+            client JS chunk, or Events Manager reports "pixel wasn't detected". */}
+        <script
+          id="meta-pixel"
+          dangerouslySetInnerHTML={{ __html: META_PIXEL_SNIPPET }}
+        />
+        <noscript>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            alt=""
+            src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+          />
+        </noscript>
+      </head>
       <body
         suppressHydrationWarning
         className={`${inter.variable} ${jakarta.variable} ${geistMono.variable} antialiased`}
