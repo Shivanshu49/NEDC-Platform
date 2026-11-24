@@ -34,9 +34,8 @@ export function PurchasePixel({
     let cancelled = false;
     let attempts = 0;
 
-    // The pixel script loads afterInteractive, so on a hard load of this page
-    // fbq can trail the first effect by a moment — retry briefly rather than
-    // silently dropping a real conversion.
+    // The pixel snippet is in <head>, but fbevents.js is still async — retry
+    // briefly rather than silently dropping a real conversion.
     const fire = () => {
       if (cancelled) return;
       if (window.fbq) {
